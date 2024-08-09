@@ -104,8 +104,8 @@ void TestListFunctions () {
    Delete (list);
 }
 int main () {
-   TestCreateAndDelete (); // Test create and delete functions
-   TestListFunctions ();   // Test other list functions
+   TestCreateAndDelete (); 
+   TestListFunctions ();  
    return 0;
 }
 
