@@ -3,7 +3,14 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // intlist.c
-// Program on functions of Linked list.
+// a)	Create – Creates a new linked list.
+// b)	Delete – Deletes the list and all the linked elements.
+// c)	Add – Adds an element to the end of the list.
+// d)	Insert – Inserts an element at a particular index (zero based).
+// e)	RemoveAt – Removes the element at a particular index (zero based).
+// f)	Remove – Removes the first occurrence of a specific element.
+// g)	Count – Counts number of elements in the list.
+// h)	Get – Gets the element at a particular index.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <malloc.h>
