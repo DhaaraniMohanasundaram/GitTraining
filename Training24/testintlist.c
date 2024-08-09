@@ -3,27 +3,22 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // testintlist.c
-// a)	Create – Creates a new linked list.
-// b)	Delete – Deletes the list and all the linked elements.
-// c)	Add – Adds an element to the end of the list.
-// d)	Insert – Inserts an element at a particular index (zero based).
-// e)	RemoveAt – Removes the element at a particular index (zero based).
-// f)	Remove – Removes the first occurrence of a specific element.
-// g)	Count – Counts number of elements in the list.
-// h)	Get – Gets the element at a particular index
+// Program on Testing and implementing the Linked list functions.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include "intlist.h"
 // Function to print all elements in the list
 void PrintList (IntList* list) {
-   Node* current = list->head;
+   Node* current = list->head; // Start at the head of the list
    if (current == NULL) {
       printf ("List is null\n");
    }
    else {
+      // Traverse the list
       while (current != NULL) {
          printf ("%d", current->data);
          current = current->next;
+         // Move to next node
          if (current != NULL) {
             printf (" -> ");
          }

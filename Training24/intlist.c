@@ -3,14 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // intlist.c
-// a)	Create – Creates a new linked list.
-// b)	Delete – Deletes the list and all the linked elements.
-// c)	Add – Adds an element to the end of the list.
-// d)	Insert – Inserts an element at a particular index (zero based).
-// e)	RemoveAt – Removes the element at a particular index (zero based).
-// f)	Remove – Removes the first occurrence of a specific element.
-// g)	Count – Counts number of elements in the list.
-// h)	Get – Gets the element at a particular index.
+// Program on Linked list functions.
 // ------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <malloc.h>
@@ -18,18 +11,19 @@
 // Allocate memory for a new list structure
 // Initialize the list as empty
 IntList* Create () {
-   IntList* newList = (IntList*)malloc (sizeof (IntList));
-   if (newList == NULL) {
+   IntList* newList = (IntList*)malloc (sizeof (IntList)); //Allocate memory for the list
+   if (newList == NULL) { // Check if memory allocation failed
       printf ("Memory allocation failed");
       return NULL;
    }
-   newList->head = NULL;
+   newList->head = NULL; // Intialilze head pointer as null
    return newList;
 }
 // Delete the entire list and free memory
 void Delete (IntList* list) {
-   Node* current = list->head;
+   Node* current = list->head; // Start from the head of the list
    Node* next;
+   // Traverse the list and free each node
    while (current != NULL) {
       next = current->next;
       free (current);
@@ -39,18 +33,20 @@ void Delete (IntList* list) {
 }
 // Add a new element to the end of the list
 void Add (IntList* list, int data) {
-   Node* newNode = (Node*)malloc (sizeof (Node));
+   Node* newNode = (Node*)malloc (sizeof (Node)); // Allocate memory for a new node
    if (newNode == NULL) {
       printf ("Memory allocation failed");
       return;
    }
-   newNode->data = data;
-   newNode->next = NULL;
+   newNode->data = data; // Set the data for the new node
+   newNode->next = NULL; // Initialize the next pointer to NULL
+   //If the list is empty, set the new node as the head
    if (list->head == NULL) {
       list->head = newNode;
    }
    else {
       Node* current = list->head;
+      // Traverse to the end of the list
       while (current->next != NULL) {
          current = current->next;
       }
@@ -69,12 +65,14 @@ void Insert (IntList* list, int index, int data) {
       return;
    }
    newNode->data = data;
+   // If inserting at the head
    if (index == 0) {
       newNode->next = list->head;
       list->head = newNode;
    }
    else {
       Node* current = list->head;
+      // Traverse to the node before the insertion point
       for (int i = 0; i < index - 1; i++) {
          current = current->next;
       }
@@ -90,19 +88,21 @@ void RemoveAt (IntList* list, int index) {
    }
    Node* current = list->head;
    Node* prev = NULL;
+   //If removing the head node
    if (index == 0) {
       list->head = current->next;
       free (current);
       printf ("Element at index 0 removed.\n");
    }
    else {
+      // Traverse to the node before the one to be removed
       for (int i = 0; i < index - 1; i++) {
          prev = current;
          current = current->next;
       }
       Node* temp = current->next;
       if (temp != NULL) {
-         current->next = temp->next;
+         current->next = temp->next; // Node to be removed
          free (temp);
          printf ("Element at index %d removed.\n", index);
       }
@@ -143,6 +143,7 @@ void Remove (IntList* list, int data) {
 int Count (IntList* list) {
    int count = 0;
    Node* current = list->head;
+   // Traverse the list and count nodes
    while (current != NULL) {
       count++;
       current = current->next;
@@ -156,6 +157,7 @@ int Get (IntList* list, int index) {
       return -1;  // Return -1 indicating an error or empty list
    }
    Node* current = list->head;
+   // Traverse to the node at the specified index
    for (int i = 0; i < index; i++) {
       current = current->next;
    }
