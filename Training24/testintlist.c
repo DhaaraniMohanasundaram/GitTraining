@@ -103,6 +103,7 @@ void TestListFunctions () {
    // Cleans up memory
    Delete (list);
 }
+
 int main () {
    TestCreateAndDelete (); 
    TestListFunctions ();  
