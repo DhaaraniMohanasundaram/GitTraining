@@ -19,7 +19,8 @@
 // intlist.h
 // Program on Linked list header file.
 // --------------------------------------------------------------------------------------------------------------------------------
-#ifndef INTLIST_H
+
+#pragma once
 #define INTLIST_H
 
 // Define a structure for a node in the linked list
@@ -27,18 +28,25 @@ typedef struct Node {
    int data;
    struct Node* next;
 } Node;
+
 // Define the structure for the linked list itself
 typedef struct {
    Node* head;
 } IntList;
 
-// Function prototypes
+// Define error codes for various error conditions
+#define SUCCESS 0
+#define ALLOCATION_FAILURE 1
+#define INVALID_INDEX 2
+#define ELEMENT_NOT_FOUND 3
+
+// Function prototypes with error codes for return values
 IntList* Create ();
 void Delete (IntList* list);
-void Add (IntList* list, int data);
-void Insert (IntList* list, int index, int data);
-void RemoveAt (IntList* list, int index);
-void Remove (IntList* list, int data);
+int Add (IntList* list, int data);
+int Insert (IntList* list, int index, int data);
+int RemoveAt (IntList* list, int index);
+int Remove (IntList* list, int data);
 int Count (IntList* list);
-int Get (IntList* list, int index);
-#endif
+int Get (IntList* list, int index, int* element);
+
