@@ -6,161 +6,195 @@
 // Program on Linked list functions.
 // ------------------------------------------------------------------------------------------------
 
-
 #include <malloc.h>
 #include "intlist.h"
 
-// Allocate memory for a new list structure and Initialize the list as empty
+// Global variable to store the last error code
+ int mlastError = SUCCESS;
+
+// Creating a new list
+// Allocate memory for a new list structure and initialize the list as empty
 IntList* Create () {
    IntList* newList = (IntList*)malloc (sizeof (IntList));
-   if (newList == NULL) { // Check if memory allocation failed
+   if (newList == NULL) {
+      mlastError = MEMORY_ALLOCATION_FAILED;
       return NULL;
    }
-   newList->head = NULL; // Intialilze head pointer as null
+   newList->head = NULL; ; // Intialilze head pointer as null
+   mlastError = SUCCESS;
    return newList;
 }
 
 // Delete the entire list and free memory
 void Delete (IntList* list) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return;
+   }
    Node* current = list->head;
    Node* next;
-   // Traverse the list and free each node
-   while (current != NULL) {
+   while (current != NULL) {  // Traverse the list and free each node
       next = current->next;
       free (current);
       current = next;
    }
    free (list);
-   return SUCCESS;
+   mlastError = SUCCESS;
 }
 
 // Add a new element to the end of the list
-int Add (IntList* list, int data) {
+void Add (IntList* list, int data) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return;
+   }
    Node* newNode = (Node*)malloc (sizeof (Node));
    if (newNode == NULL) {
-      return ALLOCATION_FAILURE;
+      mlastError = MEMORY_ALLOCATION_FAILED;
+      return;
    }
    newNode->data = data;
    newNode->next = NULL;
-   //If the list is empty, set the new node as the head
-   if (list->head == NULL) {
+   if (list->head == NULL) {  //If the list is empty, set the new node as the head
       list->head = newNode;
    }
    else {
       Node* current = list->head;
-      // Traverse to the end of the list
-      while (current->next != NULL) {
+      while (current->next != NULL) {  // Traverse to the end of the list
          current = current->next;
       }
       current->next = newNode;
    }
-   return SUCCESS;
+   mlastError = SUCCESS;
 }
 
 // Insert a new element at a specified index (zero-based)
-int Insert (IntList* list, int index, int data) {
+void Insert (IntList* list, int index, int data) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return;
+   }
    if (index < 0 || index > Count (list)) {
-      return INVALID_INDEX;
+      mlastError = INVALID_INDEX;
+      return;
    }
    Node* newNode = (Node*)malloc (sizeof (Node));
    if (newNode == NULL) {
-      return ALLOCATION_FAILURE;
+      mlastError = MEMORY_ALLOCATION_FAILED;
+      return;
    }
    newNode->data = data;
-   // If inserting at the head
-   if (index == 0) {
+   if (index == 0) { // If inserting at the head
       newNode->next = list->head;
       list->head = newNode;
    }
    else {
       Node* current = list->head;
-      // Traverse to the node before the insertion point
-      for (int i = 0; i < index - 1; i++) {
+      for (int i = 0; i < index - 1; i++) {  // Traverse to the node before the insertion point
          current = current->next;
       }
       newNode->next = current->next;
       current->next = newNode;
    }
-   return SUCCESS;
+   mlastError = SUCCESS;
 }
 
-// Remove the element at a specified index
-int RemoveAt (IntList* list, int index) {
+// Remove the element at a specified index (zero-based)
+void RemoveAt (IntList* list, int index) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return;
+   }
    if (index < 0 || index >= Count (list)) {
-      return INVALID_INDEX;
+      mlastError = INVALID_INDEX;
+      return;
    }
    Node* current = list->head;
    Node* prev = NULL;
-   //If removing the head node
-   if (index == 0) {
+   if (index == 0) { //If removing the head node
       list->head = current->next;
       free (current);
    }
-   else {
-      // Traverse to the node before the one to be removed
+   else {   // Traverse to the node before the one to be removed
       for (int i = 0; i < index - 1; i++) {
          prev = current;
          current = current->next;
       }
       Node* temp = current->next;
       if (temp != NULL) {
-         current->next = temp->next; // Node to be removed
+         current->next = temp->next;   // Node to be removed
          free (temp);
       }
       else {
-         return INVALID_INDEX;
+         mlastError = INVALID_INDEX;
+         return;
       }
    }
-   return SUCCESS;
+   mlastError = SUCCESS;
 }
 
 // Remove the first occurrence of a specific element
-int Remove (IntList* list, int data) {
+void Remove (IntList* list, int data) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return;
+   }
    Node* current = list->head;
    Node* prev = NULL;
-   // Traverse the list to find the first occurrence of the element
-   while (current != NULL) {
+   while (current != NULL) {  // Traverse the list to find the first occurrence of the element
       if (current->data == data) {
-         // If the element to remove is found
-         if (prev == NULL) {
+         if (prev == NULL) {  // If the element to remove is found at head of the list
             list->head = current->next;
          }
          else {
-            prev->next = current->next;
+            prev->next = current->next;   // The element is somewhere after the head
          }
          free (current);
-         return SUCCESS;
+         mlastError = SUCCESS;
+         return;
       }
-      // Move to the next node
       prev = current;
-      current = current->next;
+      current = current->next;   // Move to the next node
    }
-   return ELEMENT_NOT_FOUND;
+   mlastError = ELEMENT_NOT_FOUND;
 }
 
 // Count the number of elements in the list
 int Count (IntList* list) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return 0;
+   }
    int count = 0;
    Node* current = list->head;
-   // Traverse the list and count nodes
-   while (current != NULL) {
+   while (current != NULL) {  // Traverse the list and count nodes
       count++;
       current = current->next;
    }
+   mlastError = SUCCESS;
    return count;
 }
 
 // Get the element at a specified index
 int Get (IntList* list, int index, int* element) {
+   if (list == NULL) {
+      mlastError = NULL_POINTER;
+      return INVALID_INDEX;
+   }
    if (index < 0 || index >= Count (list)) {
-      return INVALID_INDEX; // Return error code for invalid index
+      mlastError = INVALID_INDEX;
+      return INVALID_INDEX;
    }
    Node* current = list->head;
-   // Traverse to the node at the specified index
-   for (int i = 0; i < index; i++) {
+   for (int i = 0; i < index; i++) {   // Traverse to the node at the specified index
       current = current->next;
    }
-   *element = current->data; // Store the result in the output parameter
-   return SUCCESS; 
+   *element = current->data;
+   mlastError = SUCCESS;
+   return SUCCESS;
 }
 
+// Function to get the last error code
+int GetIntListLastError () {
+   return mlastError;
+}

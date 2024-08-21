@@ -11,16 +11,14 @@
 
 // Function to print all elements in the list
 void PrintList (IntList* list) {
-   Node* current = list->head; // Start at the head of the list
+   Node* current = list->head;
    if (current == NULL) {
-      printf ("List is empty\n");
+      printf ("List is empty.\n");
    }
    else {
-      // Traverse the list
       while (current != NULL) {
          printf ("%d", current->data);
          current = current->next;
-         // Move to next node
          if (current != NULL) {
             printf (" -> ");
          }
@@ -29,106 +27,95 @@ void PrintList (IntList* list) {
    }
 }
 
-// Function to test creation and deletion of the list
-void TestCreateAndDelete () {
-   printf ("Testing the create and delete functions of a list ::\n");
-   IntList* list = Create ();
-   if (list == NULL) {
-      printf ("Failed to create the list.\n");
-      return;
-   }
-   printf ("List created successfully.\n");
-   // Adding elements to the newly created list
-   if (Add (list, 0) || Add (list, 2) || Add (list, 4) || Add (list, 6)) {
-      printf ("Failed to add elements to the list.\n");
-   }
-   else {
-      printf ("List after adding new elements: ");
-      PrintList (list);
-   }
-   // Test cleaning up memory in list
-   Delete (list);
-   list = NULL; // Set pointer to NULL to avoid accessing freed memory
-   if (list == NULL) {
-      printf ("List deleted successfully.\n");
-   }
-   else {
-      printf ("List was not deleted properly.\n");
-   }
-   printf ("\n");
-}
-
-// Function to test add, insert, removeAt, removeElement, count and get functions
-void TestListFunctions () {
-   printf ("Testing additional list functionalities ::\n");
-   IntList* list = Create ();
-   if (list == NULL) {
-      printf ("Failed to create the list.\n");
-      return;
-   }
-
-   // Test Add function
-   if (Add (list, 1) != SUCCESS || Add (list, 2) != SUCCESS || Add (list, 3) != SUCCESS || Add (list, 2) != SUCCESS || Add (list, 1) != SUCCESS) {
-      printf ("Failed to add elements to the list.\n");
-   }
-   else {
-      printf ("List after adding new elements: ");
-      PrintList (list);
-   }
-   printf ("\n");
-
-   // Test Insert function
-   int indexToInsert = -1;
-   if (Insert (list, -1, 2) != SUCCESS) {
-      printf ("Failed to insert element at index %d.\n", indexToInsert);
-   }
-   else {
-      printf ("List after attempting to insert the element at %d:  ", indexToInsert);
-      PrintList (list);
-   }
-   printf ("\n");
-
-   // Test RemoveAt function
-   int indexToRemove = 3;
-   if (RemoveAt (list, indexToRemove) != SUCCESS) {
-      printf ("Failed to remove element at index %d.\n", indexToRemove);
-   }
-   else {
-      printf ("List after attempting to remove element at index %d:  ", indexToRemove);
-      PrintList (list);
-   }
-   printf ("\n");
-
-   // Test Remove function
-   int elementToRemove = 1;
-   if (Remove (list, elementToRemove) != SUCCESS) {
-      printf ("Failed to remove element %d.\n", elementToRemove);
-   }
-   else {
-      printf ("List after attempting to remove first occurence of element %d:  ", elementToRemove);
-      PrintList (list);
-   }
-   printf ("\n");
-
-   // Test CountElements function
-   int count = Count (list);
-   printf ("Number of elements in the list: %d\n", count);
-   printf ("\n");
-
-   // Test Get function
-   int indexToGet = -3;  // Example index
-   int element;
-   int result = Get (list, indexToGet, &element);
-   if (result == INVALID_INDEX) {
-      printf ("No element found at index %d or list is empty.\n", indexToGet);
-   }
-   else {
-      printf ("Element at index %d: %d\n", indexToGet, element);
+// Function to print the error message based on error code
+void PrintError (int errorCode) {
+   switch (errorCode) {
+   case SUCCESS:
+      printf ("Operation succeeded.\n");
+      break;
+   case INVALID_INDEX:
+      printf ("Error: Invalid index.\n");
+      break;
+   case ELEMENT_NOT_FOUND:
+      printf ("Error: Element not found.\n");
+      break;
+   case MEMORY_ALLOCATION_FAILED:
+      printf ("Error: Memory allocation failed.\n");
+      break;
+   case NULL_POINTER:
+      printf ("Error: Null pointer.\n");
+      break;
+   default:
+      printf ("Error: Unknown error code %d.\n", errorCode);
+      break;
    }
 }
 
 int main () {
-   TestCreateAndDelete ();
-   TestListFunctions ();
+   IntList* list = Create ();
+   if (list == NULL) {
+      PrintError (GetIntListLastError ());
+      return 1;
+   }
+   printf ("List created successfully. \n");
+   printf ("\n");
+
+   // Test for Adding elements
+   Add (list, 10);
+   Add (list, 20);
+   Add (list, 30);
+   Add (list, 20);
+   Add (list, 10);
+   PrintError (GetIntListLastError ());
+   printf ("List after adding elements:\n");
+   PrintList (list);
+   printf ("\n");
+
+   // Get the element (Zero based index)
+   int value;
+   int indexToGet = 1;
+   int result = Get (list, indexToGet, &value);
+   if (result == SUCCESS) {
+      printf ("Element at index %d : %d\n", indexToGet, value);
+   }
+   else {
+      PrintError (result);
+   }
+   printf ("\n");
+
+   // Insert element
+   int indexToInsert = 1;
+   int valueToInsert = 15;
+   Insert (list, indexToInsert, valueToInsert);
+   PrintError (GetIntListLastError ());
+   printf ("List after attempting to insert %d at index %d:\n", valueToInsert, indexToInsert);
+   PrintList (list);
+   printf ("\n");
+
+   // Remove element at index
+   int indexToRemoveAt = 2;
+   RemoveAt (list, indexToRemoveAt);
+   PrintError (GetIntListLastError ());
+   printf ("List after attempting to remove element at index %d:\n", indexToRemoveAt);
+   PrintList (list);
+   printf ("\n");
+
+   // Remove the first occurence of given element 
+   int valueToRemove = 40;
+   Remove (list, valueToRemove);
+   PrintError (GetIntListLastError ());
+   printf ("List after attempting to remove element (First occurence) %d:\n", valueToRemove);
+   PrintList (list);
+   printf ("\n");
+
+   // Count the number of elements in list
+   printf ("Total number of elements in the current list : %d \n", Count (list));
+   printf ("\n");
+
+   // Delete the list
+   Delete (list);
+   PrintError (GetIntListLastError ());
+   printf ("List deleted successfully.\n");
+
    return 0;
 }

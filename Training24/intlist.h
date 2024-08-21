@@ -36,17 +36,20 @@ typedef struct {
 
 // Define error codes for various error conditions
 #define SUCCESS 0
-#define ALLOCATION_FAILURE 1
-#define INVALID_INDEX 2
-#define ELEMENT_NOT_FOUND 3
+#define INVALID_INDEX -1
+#define ELEMENT_NOT_FOUND -2
+#define MEMORY_ALLOCATION_FAILED -3
+#define NULL_POINTER -4
 
-// Function prototypes with error codes for return values
+// Function prototypes
 IntList* Create ();
 void Delete (IntList* list);
-int Add (IntList* list, int data);
-int Insert (IntList* list, int index, int data);
-int RemoveAt (IntList* list, int index);
-int Remove (IntList* list, int data);
+void Add (IntList* list, int data);
+void Insert (IntList* list, int index, int data);
+void RemoveAt (IntList* list, int index);
+void Remove (IntList* list, int data);
 int Count (IntList* list);
 int Get (IntList* list, int index, int* element);
 
+// Function to get the last error code
+int GetIntListLastError ();
