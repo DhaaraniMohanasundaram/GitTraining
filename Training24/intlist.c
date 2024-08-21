@@ -5,15 +5,11 @@
 // intlist.c
 // Program on Linked list functions.
 // ------------------------------------------------------------------------------------------------
-
 #include <malloc.h>
 #include "intlist.h"
 
-// Global variable to store the last error code
- int mlastError = SUCCESS;
+int mlastError = SUCCESS;  // Global variable to store the last error code
 
-// Creating a new list
-// Allocate memory for a new list structure and initialize the list as empty
 IntList* Create () {
    IntList* newList = (IntList*)malloc (sizeof (IntList));
    if (newList == NULL) {
@@ -25,7 +21,6 @@ IntList* Create () {
    return newList;
 }
 
-// Delete the entire list and free memory
 void Delete (IntList* list) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -42,7 +37,6 @@ void Delete (IntList* list) {
    mlastError = SUCCESS;
 }
 
-// Add a new element to the end of the list
 void Add (IntList* list, int data) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -55,9 +49,7 @@ void Add (IntList* list, int data) {
    }
    newNode->data = data;
    newNode->next = NULL;
-   if (list->head == NULL) {  //If the list is empty, set the new node as the head
-      list->head = newNode;
-   }
+   if (list->head == NULL) list->head = newNode;    //If the list is empty, set the new node as the head
    else {
       Node* current = list->head;
       while (current->next != NULL) {  // Traverse to the end of the list
@@ -68,7 +60,6 @@ void Add (IntList* list, int data) {
    mlastError = SUCCESS;
 }
 
-// Insert a new element at a specified index (zero-based)
 void Insert (IntList* list, int index, int data) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -90,16 +81,13 @@ void Insert (IntList* list, int index, int data) {
    }
    else {
       Node* current = list->head;
-      for (int i = 0; i < index - 1; i++) {  // Traverse to the node before the insertion point
-         current = current->next;
-      }
+      for (int i = 0; i < index - 1; i++) current = current->next;   // Traverse to the node before the insertion point
       newNode->next = current->next;
       current->next = newNode;
    }
    mlastError = SUCCESS;
 }
 
-// Remove the element at a specified index (zero-based)
 void RemoveAt (IntList* list, int index) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -133,7 +121,6 @@ void RemoveAt (IntList* list, int index) {
    mlastError = SUCCESS;
 }
 
-// Remove the first occurrence of a specific element
 void Remove (IntList* list, int data) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -143,12 +130,8 @@ void Remove (IntList* list, int data) {
    Node* prev = NULL;
    while (current != NULL) {  // Traverse the list to find the first occurrence of the element
       if (current->data == data) {
-         if (prev == NULL) {  // If the element to remove is found at head of the list
-            list->head = current->next;
-         }
-         else {
-            prev->next = current->next;   // The element is somewhere after the head
-         }
+         if (prev == NULL)  list->head = current->next;   // If the element to remove is found at head of the list
+         else prev->next = current->next;   // The element is somewhere after the head
          free (current);
          mlastError = SUCCESS;
          return;
@@ -159,7 +142,6 @@ void Remove (IntList* list, int data) {
    mlastError = ELEMENT_NOT_FOUND;
 }
 
-// Count the number of elements in the list
 int Count (IntList* list) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -175,7 +157,6 @@ int Count (IntList* list) {
    return count;
 }
 
-// Get the element at a specified index
 int Get (IntList* list, int index, int* element) {
    if (list == NULL) {
       mlastError = NULL_POINTER;
@@ -186,15 +167,13 @@ int Get (IntList* list, int index, int* element) {
       return INVALID_INDEX;
    }
    Node* current = list->head;
-   for (int i = 0; i < index; i++) {   // Traverse to the node at the specified index
+   for (int i = 0; i < index; i++)  // Traverse to the node at the specified index
       current = current->next;
-   }
    *element = current->data;
    mlastError = SUCCESS;
    return SUCCESS;
 }
 
-// Function to get the last error code
 int GetIntListLastError () {
    return mlastError;
 }

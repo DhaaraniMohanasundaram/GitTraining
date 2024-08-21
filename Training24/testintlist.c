@@ -4,30 +4,25 @@
 // ------------------------------------------------------------------
 // testintlist.c
 // Program on Testing and implementing the Linked list functions.
-// ------------------------------------------------------------------------------------------------
-
+// -----------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include "intlist.h"
 
-// Function to print all elements in the list
 void PrintList (IntList* list) {
    Node* current = list->head;
-   if (current == NULL) {
+   if (current == NULL) 
       printf ("List is empty.\n");
-   }
    else {
       while (current != NULL) {
          printf ("%d", current->data);
          current = current->next;
-         if (current != NULL) {
+         if (current != NULL) 
             printf (" -> ");
-         }
       }
       printf (" -> NULL\n");
    }
 }
 
-// Function to print the error message based on error code
 void PrintError (int errorCode) {
    switch (errorCode) {
    case SUCCESS:
@@ -60,12 +55,11 @@ int main () {
    printf ("List created successfully. \n");
    printf ("\n");
 
-   // Test for Adding elements
-   Add (list, 10);
+   Add (list, -10);
    Add (list, 20);
    Add (list, 30);
    Add (list, 20);
-   Add (list, 10);
+   Add (list, -10);
    PrintError (GetIntListLastError ());
    printf ("List after adding elements:\n");
    PrintList (list);
@@ -73,14 +67,12 @@ int main () {
 
    // Get the element (Zero based index)
    int value;
-   int indexToGet = 1;
+   int indexToGet = 0;
    int result = Get (list, indexToGet, &value);
-   if (result == SUCCESS) {
+   if (result == SUCCESS) 
       printf ("Element at index %d : %d\n", indexToGet, value);
-   }
-   else {
+   else 
       PrintError (result);
-   }
    printf ("\n");
 
    // Insert element
@@ -92,7 +84,7 @@ int main () {
    PrintList (list);
    printf ("\n");
 
-   // Remove element at index
+   // Remove element at specific index
    int indexToRemoveAt = 2;
    RemoveAt (list, indexToRemoveAt);
    PrintError (GetIntListLastError ());
