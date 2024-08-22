@@ -24,7 +24,7 @@
 #pragma once
 #define INTLIST_H
 
-/// Define a structure for a node in the linked list
+// Define a structure for a node in the linked list
 typedef struct Node {
    int data;
    struct Node* next;
@@ -35,7 +35,7 @@ typedef struct {
    Node* head;
 } IntList;
 
-// Define error codes for various error conditions
+// Error codes for various error conditions
 #define SUCCESS 0
 #define INVALID_INDEX -1
 #define ELEMENT_NOT_FOUND -2

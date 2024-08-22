@@ -10,14 +10,12 @@
 
 void PrintList (IntList* list) {
    Node* current = list->head;
-   if (current == NULL) 
-      printf ("List is empty.\n");
+   if (current == NULL) printf ("List is empty.\n");
    else {
       while (current != NULL) {
          printf ("%d", current->data);
          current = current->next;
-         if (current != NULL) 
-            printf (" -> ");
+         if (current != NULL) printf (" -> ");
       }
       printf (" -> NULL\n");
    }
@@ -66,7 +64,6 @@ int main () {
    PrintList (list);
    printf ("\n");
 
-   // Get the element (Zero based index)
    int value;
    int indexToGet = -1;
    int result = Get (list, indexToGet, &value);
@@ -77,7 +74,6 @@ int main () {
    }
    printf ("\n");
 
-   // Insert element
    int indexToInsert = 1;
    int valueToInsert = 15;
    Insert (list, indexToInsert, valueToInsert);
@@ -86,15 +82,13 @@ int main () {
    PrintList (list);
    printf ("\n");
 
-   // Remove element at specific index
    int indexToRemoveAt = 2;
    RemoveAt (list, indexToRemoveAt);
    PrintError (GetIntListLastError ());
    printf ("List after attempting to remove element at index %d:\n", indexToRemoveAt);
    PrintList (list);
    printf ("\n");
-
-   // Remove the first occurence of given element 
+ 
    int valueToRemove = 40;
    Remove (list, valueToRemove);
    PrintError (GetIntListLastError ());
@@ -102,11 +96,9 @@ int main () {
    PrintList (list);
    printf ("\n");
 
-   // Count the number of elements in list
    printf ("Total number of elements in the current list : %d \n", Count (list));
    printf ("\n");
 
-   // Delete the list
    Delete (list);
    PrintError (GetIntListLastError ());
    printf ("List deleted successfully.\n");
