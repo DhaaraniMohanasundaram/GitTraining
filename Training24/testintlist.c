@@ -52,10 +52,11 @@ int main () {
       PrintError (GetIntListLastError ());
       return 1;
    }
+   PrintError (GetIntListLastError ());
    printf ("List created successfully. \n");
    printf ("\n");
 
-   Add (list, -10);
+   Add (list, -1);
    Add (list, 20);
    Add (list, 30);
    Add (list, 20);
@@ -67,12 +68,13 @@ int main () {
 
    // Get the element (Zero based index)
    int value;
-   int indexToGet = 0;
+   int indexToGet = -1;
    int result = Get (list, indexToGet, &value);
-   if (result == SUCCESS) 
-      printf ("Element at index %d : %d\n", indexToGet, value);
-   else 
-      PrintError (result);
+   if (result == SUCCESS) printf ("Element at index %d : %d\n", indexToGet, value);
+   else {
+      PrintError (GetIntListLastError ());
+      printf ("%d is an invalid index.\n", indexToGet);
+   }
    printf ("\n");
 
    // Insert element
