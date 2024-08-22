@@ -64,12 +64,13 @@ int main () {
    printf ("\n");
 
    int value;
-   int indexToGet = 0;
+   int indexToGet = 30;
    int result = Get (list, indexToGet, &value);
-   if (result == SUCCESS) 
-      printf ("Element at index %d : %d\n", indexToGet, value);
-   else 
+   if (result == SUCCESS) printf ("Element at index %d : %d\n", indexToGet, value);
+   else {
       PrintError (result);
+      printf ("%d is an invalid index\n", indexToGet);
+   }
    printf ("\n");
 
    int indexToInsert = 1;
