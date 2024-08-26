@@ -35,8 +35,8 @@ void PrintError (int errorCode) {
    case MEMORY_ALLOCATION_FAILED:
       printf ("Error: Memory allocation failed.\n");
       break;
-   case NULL_POINTER:
-      printf ("Error: Null pointer.\n");
+   case NULL_LIST:
+      printf ("Error: List is Null.\n");
       break;
    default:
       printf ("Error: Unknown error code %d.\n", errorCode);
@@ -53,49 +53,45 @@ int main () {
    printf ("List created successfully. \n");
    printf ("\n");
 
-   Add (list, -10);
-   Add (list, 20);
-   Add (list, 30);
-   Add (list, 20);
-   Add (list, -10);
-   PrintError (GetIntListLastError ());
-   printf ("List after adding elements:\n");
+   int elementsToAdd[] = { -1, 20, 30, 20, -10 };
+   int numElements = sizeof (elementsToAdd) / sizeof (elementsToAdd[0]);
+   for (int i = 0; i < numElements; i++) Add (list, elementsToAdd[i]);
+   printf ("List after adding elements: ");
    PrintList (list);
    printf ("\n");
 
-   int value;
-   int indexToGet = 30;
-   int result = Get (list, indexToGet, &value);
-   if (result == SUCCESS) printf ("Element at index %d : %d\n", indexToGet, value);
+   int indexToGet = 0;
+   int value = Get (list, indexToGet);
+   if (GetIntListLastError () == SUCCESS) printf ("Element at index %d: %d\n", indexToGet, value);
    else {
-      PrintError (result);
+      PrintError (GetIntListLastError ());
       printf ("%d is an invalid index\n", indexToGet);
    }
    printf ("\n");
 
-   int indexToInsert = 1;
+   int indexToInsert = 0;
    int valueToInsert = 15;
    Insert (list, indexToInsert, valueToInsert);
    PrintError (GetIntListLastError ());
-   printf ("List after attempting to insert %d at index %d:\n", valueToInsert, indexToInsert);
+   printf ("List after attempting to insert %d at index %d: ", valueToInsert, indexToInsert);
    PrintList (list);
    printf ("\n");
-
-   int indexToRemoveAt = 2;
+  
+   int indexToRemoveAt = 3;
    RemoveAt (list, indexToRemoveAt);
    PrintError (GetIntListLastError ());
-   printf ("List after attempting to remove element at index %d:\n", indexToRemoveAt);
-   PrintList (list);
-   printf ("\n");
- 
-   int valueToRemove = 40;
-   Remove (list, valueToRemove);
-   PrintError (GetIntListLastError ());
-   printf ("List after attempting to remove element (First occurence) %d:\n", valueToRemove);
+   printf ("List after attempting to remove element at index %d: ", indexToRemoveAt);
    PrintList (list);
    printf ("\n");
 
-   printf ("Total number of elements in the current list : %d \n", Count (list));
+   int valueToRemove = 20;
+   Remove (list, valueToRemove);
+   PrintError (GetIntListLastError ());
+   printf ("List after attempting to remove element (First occurence) %d: ", valueToRemove);
+   PrintList (list);
+   printf ("\n");
+
+   printf ("Total number of elements in the current list: %d \n", Count (list));
    printf ("\n");
 
    Delete (list);

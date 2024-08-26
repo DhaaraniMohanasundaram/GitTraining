@@ -40,10 +40,19 @@ typedef struct {
 #define INVALID_INDEX -1
 #define ELEMENT_NOT_FOUND -2
 #define MEMORY_ALLOCATION_FAILED -3
-#define NULL_POINTER -4
+#define NULL_LIST -4
 
-/// <summary>Creating a new list and initialize the list as empty.</summary>
+/// <summary>Creates a new list and initialize the list as empty.</summary>
 IntList* Create ();
+
+/// <summary>Allocates the node.</summary>
+Node* AllocateNode ();
+
+/// <summary>Checks if the list is empty.</summary>
+int CheckListNull (IntList* list);
+
+/// <summary>Checks if the index is valid.</summary>
+int CheckValidIndex (IntList* list, int index);
 
 /// <summary>Deletes the entire list and frees memory.</summary>
 void Delete (IntList* list);
@@ -64,7 +73,7 @@ void Remove (IntList* list, int data);
 int Count (IntList* list);
 
 /// <summary>Get the element at a specified index.</summary>
-int Get (IntList* list, int index, int* element);
+int Get (IntList* list, int index);
 
 /// <summary>Function to get the last error code.</summary>
 int GetIntListLastError ();

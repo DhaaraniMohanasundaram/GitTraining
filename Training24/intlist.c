@@ -10,6 +10,28 @@
 
 int mlastError = SUCCESS;  // Global variable to store the last error code
 
+Node* AllocateNode () { 
+   Node* newNode = (Node*)malloc (sizeof (Node));
+   if (newNode == NULL) mlastError = MEMORY_ALLOCATION_FAILED;
+   return newNode;
+}
+
+int CheckListNull (IntList* list) {
+   if (list == NULL) {
+      mlastError = NULL_LIST;
+      return;
+   }
+   return SUCCESS; 
+}
+
+int CheckValidIndex (IntList* list, int index) {
+   if (index < 0 || index >= Count (list)) {
+      mlastError = INVALID_INDEX;
+      return 0;
+   }
+   return 1;
+}
+
 IntList* Create () {
    IntList* newList = (IntList*)malloc (sizeof (IntList));
    if (newList == NULL) {
@@ -22,10 +44,7 @@ IntList* Create () {
 }
 
 void Delete (IntList* list) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return;
-   }
+   if (CheckListNull (list)) return;
    Node* current = list->head;
    Node* next;
    while (current != NULL) {  // Traverse the list and free each node
@@ -38,15 +57,9 @@ void Delete (IntList* list) {
 }
 
 void Add (IntList* list, int data) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return;
-   }
-   Node* newNode = (Node*)malloc (sizeof (Node));
-   if (newNode == NULL) {
-      mlastError = MEMORY_ALLOCATION_FAILED;
-      return;
-   }
+   if (CheckListNull (list)) return;
+   Node* newNode = AllocateNode ();
+   if (newNode == NULL) return;
    newNode->data = data;
    newNode->next = NULL;
    if (list->head == NULL) list->head = newNode;    //If the list is empty, set the new node as the head
@@ -61,19 +74,10 @@ void Add (IntList* list, int data) {
 }
 
 void Insert (IntList* list, int index, int data) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return;
-   }
-   if (index < 0 || index > Count (list)) {
-      mlastError = INVALID_INDEX;
-      return;
-   }
-   Node* newNode = (Node*)malloc (sizeof (Node));
-   if (newNode == NULL) {
-      mlastError = MEMORY_ALLOCATION_FAILED;
-      return;
-   }
+   if (CheckListNull (list)) return;
+   if (!CheckValidIndex (list, index)) return;
+   Node* newNode = AllocateNode ();
+   if (newNode == NULL) return;
    newNode->data = data;
    if (index == 0) { // If inserting at the head
       newNode->next = list->head;
@@ -89,28 +93,19 @@ void Insert (IntList* list, int index, int data) {
 }
 
 void RemoveAt (IntList* list, int index) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return;
-   }
-   if (index < 0 || index >= Count (list)) {
-      mlastError = INVALID_INDEX;
-      return;
-   }
+   if (CheckListNull (list)) return;
+   if (!CheckValidIndex (list, index)) return;
    Node* current = list->head;
-   Node* prev = NULL;
-   if (index == 0) { //If removing the head node
+   if (index == 0) {
       list->head = current->next;
       free (current);
    }
-   else {   // Traverse to the node before the one to be removed
-      for (int i = 0; i < index - 1; i++) {
-         prev = current;
-         current = current->next;
-      }
-      Node* temp = current->next;
+   else {
+      Node* temp = NULL;
+      for (int i = 0; i < index - 1; i++) current = current->next;
+      temp = current->next;
       if (temp != NULL) {
-         current->next = temp->next;   // Node to be removed
+         current->next = temp->next;
          free (temp);
       }
       else {
@@ -122,10 +117,7 @@ void RemoveAt (IntList* list, int index) {
 }
 
 void Remove (IntList* list, int data) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return;
-   }
+   if (CheckListNull (list)) return;
    Node* current = list->head;
    Node* prev = NULL;
    while (current != NULL) {  // Traverse the list to find the first occurrence of the element
@@ -143,10 +135,7 @@ void Remove (IntList* list, int data) {
 }
 
 int Count (IntList* list) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return 0;
-   }
+   if (CheckListNull (list)) return -1;
    int count = 0;
    Node* current = list->head;
    while (current != NULL) {  // Traverse the list and count nodes
@@ -157,21 +146,15 @@ int Count (IntList* list) {
    return count;
 }
 
-int Get (IntList* list, int index, int* element) {
-   if (list == NULL) {
-      mlastError = NULL_POINTER;
-      return INVALID_INDEX;
-   }
-   if (index < 0 || index >= Count (list)) {
-      mlastError = INVALID_INDEX;
-      return INVALID_INDEX;
-   }
+int Get (IntList* list, int index) {
+   if (CheckListNull (list)) return -1; 
+   if (!CheckValidIndex (list, index)) return;
    Node* current = list->head;
-   for (int i = 0; i < index; i++)  // Traverse to the node at the specified index
+   for (int i = 0; i < index; i++) {
       current = current->next;
-   *element = current->data;
+   }
    mlastError = SUCCESS;
-   return SUCCESS;
+   return current->data;
 }
 
 int GetIntListLastError () {
