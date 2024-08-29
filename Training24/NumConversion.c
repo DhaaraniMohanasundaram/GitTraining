@@ -18,10 +18,10 @@ void ConvertToBinary (int number) {
 }
 
 // Function to  check if input is a valid integer
-bool isValidInteger (const char* str) {
+bool IsValidInteger (const char* str) {
    if (*str == '-' || *str == '+') str++;   // Skip sign if present
    if (!*str) return false;   // If string is empty after sign
-   while (*str) {
+   while (*str) {   // Check each character to ensure it's a digit
       if (!isdigit (*str)) return false; 
       str++;
    }
@@ -29,11 +29,11 @@ bool isValidInteger (const char* str) {
 }
 
 // Function to get a valid integer from the user
-bool getValidInteger (int* number) {
+bool GetValidInteger (int* number) {
    char input[100];
    if (fgets (input, sizeof (input), stdin) != NULL) {
       input[strcspn (input, "\n")] = '\0';     // Remove newline character if present
-      if (isValidInteger (input) && sscanf_s (input, "%d", number) == 1) return true;
+      if (IsValidInteger (input) && sscanf_s (input, "%d", number) == 1) return true;
    }
    return false;
 }
@@ -41,13 +41,13 @@ bool getValidInteger (int* number) {
 // Function to convert an integer to its 8-bit hexadecimal representation using modulus
 void HexUsingModulus (int number) {
    unsigned char postiveInt = (unsigned char)number;    // To handle negative values
-   char hex[3]; 
+   char hex[3];   // Array to store hexadecimal representation (2 digits + null terminator)
    int index = 0;
-   if (postiveInt == 0) hex[index++] = '0';
-   else {
+   if (postiveInt == 0) hex[index++] = '0';   
+   else {   
       while (postiveInt > 0) {
-         int remainder = postiveInt % 16;
-         switch (remainder) {    // For ASCII values of hexadecimal
+         int remainder = postiveInt % 16;   // Get the remainder
+         switch (remainder) {    // Convert remainder to ASCII hexadecimal character
          case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
             hex[index++] = '0' + remainder;
             break;
@@ -55,10 +55,10 @@ void HexUsingModulus (int number) {
             hex[index++] = 'A' + (remainder - 10);
             break;
          }
-         postiveInt /= 16;
+         postiveInt /= 16; // Divide to process the next digit
       }
    }
-   hex[index] = '\0';
+   hex[index] = '\0';   // Null-terminate the hex string
    for (int j = index - 1; j >= 0; j--) printf ("%c", hex[j]);   // Reverse the hex string
    printf ("\n");
 }
@@ -67,7 +67,7 @@ int main () {
    int number;
    while (true) {
       printf ("Enter an integer: ");
-      if (getValidInteger (&number)) break;
+      if (GetValidInteger (&number)) break;
       printf ("Invalid input. Please enter a valid integer.\n");
    }
    printf ("Hexadecimal (Using format specifier): %X\n", (unsigned char)number); 
