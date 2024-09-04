@@ -24,6 +24,7 @@
 #pragma once
 #define INTLIST_H
 
+#include <stdbool.h>
 // Define a structure for a node in the linked list
 typedef struct Node {
    int data;
@@ -43,40 +44,37 @@ typedef struct {
 #define NULL_LIST -4
 
 /// <summary>Creates a new list and initialize the list as empty.</summary>
-IntList* Create ();
+IntList* Create (int* errorCode);
 
-/// <summary>Allocates the node.</summary>
-Node* AllocateNode ();
+/// <summary>Creates the a new node.</summary>
+Node* CreateNode (int data);
 
-/// <summary>Checks if the list is empty.</summary>
-int CheckListNull (IntList* list);
+/// <summary>Checks if the list pointer is null.</summary>
+bool CheckListNull (IntList* list);
 
 /// <summary>Checks if the index is valid.</summary>
-int CheckValidIndex (IntList* list, int index);
+bool CheckValidIndex (IntList* list, int index);
 
 /// <summary>Deletes the entire list and frees memory.</summary>
-void Delete (IntList* list);
+int Delete (IntList* list);
 
 /// <summary>Adds a new element to the end of the list.</summary>
-void Add (IntList* list, int data);
+int Add (IntList* list, int data);
 
 /// <summary>Insert a new element at a specified index(zero-based).</summary>
-void Insert (IntList* list, int index, int data);
+int Insert (IntList* list, int index, int data);
 
 /// <summary>Remove the element at a specified index(zero-based).</summary>
-void RemoveAt (IntList* list, int index);
+int RemoveAt (IntList* list, int index);
 
 /// <summary>Remove the first occurrence of a specific element.</summary>
-void Remove (IntList* list, int data);
+int Remove (IntList* list, int data);
 
 /// <summary>Count the number of elements in the list.</summary>
 int Count (IntList* list);
 
 /// <summary>Get the element at a specified index.</summary>
-int Get (IntList* list, int index);
-
-/// <summary>Function to get the last error code.</summary>
-int GetIntListLastError ();
+int Get (IntList* list, int index, int* errorCode);
 
 /// <summary>Function to print all elements in the list.</summary>
 void PrintList (IntList* list);

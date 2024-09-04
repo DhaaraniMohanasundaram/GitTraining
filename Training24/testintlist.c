@@ -45,26 +45,27 @@ void PrintError (int errorCode) {
 }
 
 int main () {
-   IntList* list = Create ();
+   int errorcode;
+   IntList* list = Create (&errorcode);
    if (list == NULL) {
-      PrintError (GetIntListLastError ());
+      PrintError (errorcode);
       return 1;
    }
    printf ("List created successfully. \n");
    printf ("\n");
 
-   int elementsToAdd[] = { -1, 20, 30, 20, -10 };
+   int elementsToAdd[] = { -1, -2, -3, -4, 0, 1, 2, 3, 4 };
    int numElements = sizeof (elementsToAdd) / sizeof (elementsToAdd[0]);
    for (int i = 0; i < numElements; i++) Add (list, elementsToAdd[i]);
    printf ("List after adding elements: ");
    PrintList (list);
    printf ("\n");
 
-   int indexToGet = 0;
-   int value = Get (list, indexToGet);
-   if (GetIntListLastError () == SUCCESS) printf ("Element at index %d: %d\n", indexToGet, value);
+   int indexToGet = 8;
+   int value = Get (list, indexToGet, &errorcode);
+   if (errorcode == SUCCESS) printf ("Element at index %d: %d\n", indexToGet, value);
    else {
-      PrintError (GetIntListLastError ());
+      PrintError (errorcode);
       printf ("%d is an invalid index\n", indexToGet);
    }
    printf ("\n");
@@ -72,21 +73,21 @@ int main () {
    int indexToInsert = 0;
    int valueToInsert = 15;
    Insert (list, indexToInsert, valueToInsert);
-   PrintError (GetIntListLastError ());
+   PrintError (errorcode);
    printf ("List after attempting to insert %d at index %d: ", valueToInsert, indexToInsert);
    PrintList (list);
    printf ("\n");
   
    int indexToRemoveAt = 3;
    RemoveAt (list, indexToRemoveAt);
-   PrintError (GetIntListLastError ());
+   PrintError (errorcode);
    printf ("List after attempting to remove element at index %d: ", indexToRemoveAt);
    PrintList (list);
    printf ("\n");
 
    int valueToRemove = 20;
    Remove (list, valueToRemove);
-   PrintError (GetIntListLastError ());
+   PrintError (errorcode);
    printf ("List after attempting to remove element (First occurence) %d: ", valueToRemove);
    PrintList (list);
    printf ("\n");
@@ -95,7 +96,7 @@ int main () {
    printf ("\n");
 
    Delete (list);
-   PrintError (GetIntListLastError ());
+   PrintError (errorcode);
    printf ("List deleted successfully.\n");
 
    return 0;
