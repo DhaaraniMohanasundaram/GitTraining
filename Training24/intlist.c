@@ -82,7 +82,6 @@ int Insert (IntList* list, int index, int data) {
       free (newNode);
       return INVALID_INDEX;
    }
-
    newNode->next = current->next;
    current->next = newNode;
    return SUCCESS;
@@ -92,29 +91,21 @@ int Insert (IntList* list, int index, int data) {
 int RemoveAt (IntList* list, int index) {
    if (CheckListNull (list)) return NULL_LIST;
    if (!CheckValidIndex (list, index)) return INVALID_INDEX;
-   if (index == 0) {
-      if (list->head == NULL) {
-         // List is empty, but the index is valid
-         return INVALID_INDEX; // This may not be necessary if CheckValidIndex is correct
-      }
+   if (index == 0) {   //If removing the head node
       Node* temp = list->head;
       list->head = list->head->next;
       free (temp);
       return SUCCESS;
    }
-
    Node* current = list->head;
    int count = 0;
    while (current != NULL && count < index - 1) {
       current = current->next;
       count++;
    }
-
    if (current == NULL || current->next == NULL) {
-      // Index is invalid
-      return INVALID_INDEX;
+      return INVALID_INDEX;   // Index is out of bounds
    }
-
    Node* temp = current->next;
    current->next = current->next->next;
    free (temp);
@@ -165,6 +156,6 @@ int Get (IntList* list, int index, int* errorCode) {
       count++;
    }
    if (errorCode) *errorCode = INVALID_INDEX;
-   return 0; // Return a default value; handle this in your application if needed
+   return 0; // Return a default value; 
 }
 

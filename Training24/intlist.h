@@ -46,7 +46,7 @@ typedef struct {
 /// <summary>Creates a new list and initialize the list as empty.</summary>
 IntList* Create (int* errorCode);
 
-/// <summary>Creates the a new node.</summary>
+/// <summary>Creates a new node.</summary>
 Node* CreateNode (int data);
 
 /// <summary>Checks if the list pointer is null.</summary>
