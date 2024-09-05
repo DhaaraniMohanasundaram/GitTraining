@@ -16,7 +16,7 @@ void PrintList (IntList* list) {
          current = current->next;
          if (current != NULL) printf (" -> ");
       }
-      printf (" -> NULL\n");
+      printf (" -> NULL\n");   // To signify the end of the list
    }
 }
 
