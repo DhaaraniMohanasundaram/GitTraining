@@ -4,7 +4,7 @@
 // -------------------------------------
 //  Dhaarani Mohanasundaram
 // -------------------------------------
-// Standard Header file in Main
+// Standard Header file in Main.
 // -------------------------------------
 // Header.h
 // Program on main branch.

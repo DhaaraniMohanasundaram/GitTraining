@@ -4,7 +4,7 @@
 // -------------------------------------
 //  Dhaarani Mohanasundaram
 // -------------------------------------
-// Standard Test file in Main
+// Standard Test file in Main.
 // -------------------------------------
 // Test.c
 // Program on main branch.

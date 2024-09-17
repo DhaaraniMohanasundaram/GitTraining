@@ -4,7 +4,7 @@
 // -------------------------------------
 //  Dhaarani Mohanasundaram
 // -------------------------------------
-// Standard Program file in Main
+// Standard Program file in Main.
 // -------------------------------------
 // Program.c
 // Program on main branch.
