@@ -32,11 +32,6 @@ void ConvertToBinary (int number, int bitWidth, char* binaryString) {
    binaryString[bitWidth] = '\0';
 }
 
-/// <summary> Checks if the number is within the 32-bit integer range defined by INT_MIN and INT_MAX. </summary>
-bool IsWithinInt32Range (int number) {
-   return number >= INT_MIN && number <= INT_MAX;
-}
-
 /// <summary>Function to get a valid integer from the user and returns error message if input is invalid.</summary>
 bool GetValidInteger (int* number, char* errorMessage) {
    char input[MAX_INPUT_LENGTH];
@@ -50,16 +45,12 @@ bool GetValidInteger (int* number, char* errorMessage) {
       strcpy_s (errorMessage, MAX_INPUT_LENGTH, "Input cannot be empty.");
       return false;
    }
-   long long tempNumber = strtoll (input, &num, 10);   // Reads input safely using long long
-   if (*num != '\0') {
-      strcpy_s (errorMessage, MAX_INPUT_LENGTH, "Invalid integer format.");
+   long long tempNumber = strtoll (input, &num, 10);   // Reads input safely using long long without overflow
+   if (*num != '\0' || tempNumber > INT_MAX || tempNumber < INT_MIN) {
+      strcpy_s (errorMessage, MAX_INPUT_LENGTH, (*num != '\0') ? "Invalid integer format." : "Number is out of 32 - bit range.");
       return false;
    }
-   if (tempNumber > INT_MAX || tempNumber < INT_MIN) {
-      strcpy_s (errorMessage, MAX_INPUT_LENGTH, "Number is out of 32-bit range.");
-      return false;
-   }
-   *number = (int)tempNumber;   // Casts to int after validation
+   *number = (int)tempNumber; // Casts to int, after valid input
    return true;
 }
 
@@ -99,7 +90,7 @@ void TestCases () {
    int numTests = sizeof (testCases) / sizeof (testCases[0]);
    for (int i = 0; i < numTests; i++) {
       long long number = testCases[i].number;
-      if (number < INT_MIN || number > INT_MAX) printf ("Number = %lld\n" YELLOW "Error: Number is out of 32-bit range.\n" RESET "\n", number);
+      if (number < INT_MIN || number > INT_MAX) printf ("Number = %lld\n" YELLOW "Error: Number is out of 32 - bit range.\n" RESET "\n", number);
       else {
          int numberRange = (int)number;
          int bitWidth = DetermineBitWidth (numberRange);
@@ -107,8 +98,8 @@ void TestCases () {
          ConvertToBinary (numberRange, bitWidth, binary);
          BinaryToHex (binary, hex, bitWidth);
          printf ("Number = %lld\nBinary value: %s\nBinary Test: %s\nHexadecimal value: %s\nHexadecimal Test: %s\n\n",
-                  number, binary, strcmp (binary, testCases[i].expectedBinary) == 0 ? GREEN "PASS" RESET : RED "FAIL" RESET,
-                  hex, strcmp (hex, testCases[i].expectedHex) == 0 ? GREEN "PASS" RESET : RED "FAIL" RESET);
+            number, binary, strcmp (binary, testCases[i].expectedBinary) == 0 ? GREEN "PASS" RESET : RED "FAIL" RESET,
+            hex, strcmp (hex, testCases[i].expectedHex) == 0 ? GREEN "PASS" RESET : RED "FAIL" RESET);
       }
    }
 }
