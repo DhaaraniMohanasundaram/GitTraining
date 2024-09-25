@@ -1,50 +1,55 @@
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-// -------------------------------------
 //  Dhaarani Mohanasundaram
-// ------------------------------------------------------------------------------------------------
-// Program has functions that checks if the phrase is a palindrome or not and reverse the integer.
-// -------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 // Program.c
 // Program on branch A4.
-// -------------------------------------------------------------------------------------------------
-#include <string.h>
+// Program has functions that checks if the phrase is a palindrome or not and
+// Reverse the number and then checks for palindrome.
+// --------------------------------------------------------------------------------
 #include <ctype.h>
+#include <stdbool.h>
 #include <limits.h>
 
-int CheckPalindrome (const char* phrase) {
-   if (phrase == NULL || *phrase == '\0') return -1;   // An empty string or NULL is not considered as palindrome
+int CheckPhrasePalindrome (const char* phrase) {
+   if (phrase == NULL) return 0;   // Not a palindrome
+   char onlyAlphaNum[256] = "";
+   int j = 0;
+   // Filter out non-alphanumeric characters and convert to lowercase
+   for (int i = 0; phrase[i] != '\0'; i++) if (isalnum (phrase[i])) onlyAlphaNum[j++] = tolower (phrase[i]);
+   onlyAlphaNum[j] = '\0';
    int start = 0;
-   int end = strlen (phrase) - 1;
+   int end = j - 1;
    while (start < end) {
-      while (start < end && !isalnum (phrase[start])) start++;
-      while (start < end && !isalnum (phrase[end])) end--;
-      if (tolower (phrase[start]) != tolower (phrase[end])) return 0;   // Not a Palindrome
+      if (onlyAlphaNum[start] != onlyAlphaNum[end]) return 0;   // Not a palindrome
       start++;
       end--;
    }
-   return 1;   // Is a Palindrome
+   return 1;   // Is a palindrome
 }
 
-void ReverseNumber (long long number, long long* reversed, int* isPalindromeResult) {
-   long long temp = number;
-   long long rev = 0;
-   int isOverflow = 0;
-   // Handle negative numbers
-   if (number < 0) {
-      *reversed = LLONG_MIN;
-      *isPalindromeResult = 0;   // Negative numbers are not palindromes
-      return -1;
+bool ReverseNumber (int number, int* reversedNumber) {
+   *reversedNumber = 0;
+   while (number > 0) {
+      int digit = number % 10;
+      // Check for overflow before reversing number
+      if (*reversedNumber > (INT_MAX - digit) / 10) return true;   // Indicate overflow
+      *reversedNumber = *reversedNumber * 10 + digit;
+      number /= 10;
    }
-   while (temp != 0) {
-      if (rev > (LLONG_MAX - (temp % 10)) / 10) {
-         isOverflow = 1;
-         break;
-      }
-      rev = rev * 10 + (temp % 10);
-      temp /= 10;
+   return false;   // No overflow 
+}
+
+
+bool IsNumPalindrome (int number) {
+   if (number < 0) return false;
+   int original = number;
+   int reversed = 0;
+   while (number > 0) {
+      int digit = number % 10;
+      reversed = reversed * 10 + digit;
+      number /= 10;
    }
-   *reversed = isOverflow ? LLONG_MAX : rev;
-   *isPalindromeResult = (isOverflow || (number == rev));
+   return original == reversed;
 }
