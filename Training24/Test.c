@@ -112,7 +112,7 @@ void TestReverseNumbers () {
       if (number < 0) IntegerTableRow (number, "Invalid(Negative number)", false);
       else {
          int reversedNumber;
-         bool overflow = ReverseNumber (number, &reversedNumber);
+         bool overflow = ReverseAndCheckOverflow (number, &reversedNumber);
          char outputStr[256];
          if (overflow) IntegerTableRow (number, "Integer Overflow", false);
          else {
@@ -157,8 +157,8 @@ void TestUserInteger () {
       else {
          int validNumber = (int)inputNumber; // Cast to int after valid input
          int reversedNumber;
-         bool overflow = ReverseNumber (validNumber, &reversedNumber);
-         if (overflow) printf ("Result: %s\n", YELLOW "Invalid input (Out of range)" RESET);
+         bool overflow = ReverseAndCheckOverflow (validNumber, &reversedNumber);
+         if (overflow) printf ("Result: %s\n", YELLOW "Invalid (Out of range)" RESET);
          else {
             bool isPalindrome = IsNumPalindrome (validNumber);
             printf ("Output: %d\nResult: %s\n", reversedNumber,

@@ -17,7 +17,7 @@
 int CheckPhrasePalindrome (const char* phrase);
 
 /// <summary>Function to reverse the integer and check overflow.</summary>
-bool ReverseNumber (int number, int* reversedNumber);
+bool ReverseAndCheckOverflow (int number, int* reversedNumber);
 
 /// <summary>Function to check the reversed number for palindrome.</summary>
 bool IsNumPalindrome (int number);

@@ -29,27 +29,21 @@ int CheckPhrasePalindrome (const char* phrase) {
    return 1;   // Is a palindrome
 }
 
-bool ReverseNumber (int number, int* reversedNumber) {
+bool ReverseAndCheckOverflow (int number, int* reversedNumber) {
    *reversedNumber = 0;
    while (number > 0) {
       int digit = number % 10;
-      // Check for overflow before reversing number
+      // Check for overflow before reversing the number
       if (*reversedNumber > (INT_MAX - digit) / 10) return true;   // Indicate overflow
       *reversedNumber = *reversedNumber * 10 + digit;
       number /= 10;
    }
-   return false;   // No overflow 
+   return false;   // No overflow
 }
 
-
 bool IsNumPalindrome (int number) {
-   if (number < 0) return false;
-   int original = number;
-   int reversed = 0;
-   while (number > 0) {
-      int digit = number % 10;
-      reversed = reversed * 10 + digit;
-      number /= 10;
-   }
-   return original == reversed;
+   if (number < 0) return false;   // Negative numbers are not palindromes
+   int reversedNumber;
+   if (ReverseAndCheckOverflow (number, &reversedNumber)) return false;
+   return number == reversedNumber;
 }
