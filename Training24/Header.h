@@ -1,17 +1,30 @@
-// ------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-// -------------------------------------
-//  Dhaarani Mohanasundaram
-// -------------------------------------
-// Standard Header file in Main
-// -------------------------------------
+// Dhaarani Mohanasundaram
+// --------------------------------------------------------------------------------------
 // Header.h
-// Program on main branch.
-// ------------------------------------------------------------------------------------
+// Program on branch A4.
+// Palindrome Checker: Program that checks whether the given input(Phrase and integer)
+// is a palindrome and test few cases automatically.
+// --------------------------------------------------------------------------------------
 #pragma once
-#define HEADER_H
+#pragma warning (disable:4996)
 
-/// <summary>Function to get the "Hello, World!" message</summary>
-///<returns>Pointer to a string containing the "Hello, World!" message</returns>
-const char* GetMessage();
+#define HEADER_H
+#define _CRT_SECURE_NO_WARNINGS
+
+/// <summary>Function to check if a phrase is a palindrome</summary>
+bool CheckPhrasePalindrome (const char* phrase);
+
+/// <summary>Function to reverse the integer and check for overflow.</summary>
+bool ReverseAndCheckOverflow (int number, int* reversedNumber);
+
+/// <summary>Function to check the reversed number for palindrome.</summary>
+bool IsNumPalindrome (int number);
+
+/// <summary>Function to test and print results for palindrome checker with phrases</summary>
+void TestPhrasePalindromes ();
+
+/// <summary>Function to test and print results for reversed number palindrome.</summary>
+void TestReverseNumbers ();
