@@ -19,9 +19,3 @@ void BubbleSort (int arr[], int n);
 
 /// <summary>Performs binary search on a sorted array.</summary>
 int BinarySearch (int arr[], int n, int target);
-
-/// <summary>Runs few testcases automatically.</summary>
-void ExecuteTestCases ();
-
-/// <summary>Sorts and search for user input.</summary>
-void ExecuteUserInput ();

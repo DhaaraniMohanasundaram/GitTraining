@@ -10,26 +10,24 @@
 #include "Header.h"
 
 void BubbleSort (int arr[], int n) {
-   for (int i = 0; i < n - 1; i++)
-      for (int j = 0; j < n - i - 1; j++)
-         // Using bitwise XOR
+   for (int i = 0; i < n - 1; i++) 
+      for (int j = 0; j < n - i - 1; j++) 
          if (arr[j] > arr[j + 1]) {
-            arr[j] ^= arr[j + 1];
-            arr[j + 1] ^= arr[j];
-            arr[j] ^= arr[j + 1];
+            int temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
          }
 }
 
 int BinarySearch (int arr[], int n, int target) {
    int left = 0, right = n - 1;
    while (left <= right) {
-      int mid = left + (right - left) / 2;
+      int mid = right + left / 2;
       if (arr[mid] == target) {
          while (mid > 0 && arr[mid - 1] == target) mid--;
          return mid;
       }
-      if (arr[mid] < target) left = mid + 1;
-      else right = mid - 1;
+      (arr[mid] < target) ? (left = mid + 1) : (right = mid - 1);
    }
    return ELEMENT_NOT_FOUND;
 }
