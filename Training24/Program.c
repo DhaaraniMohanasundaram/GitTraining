@@ -5,8 +5,7 @@
 // --------------------------------------------------------------------------------
 // Program.c
 // Program on branch A4.
-// Program has functions that checks if the phrase is a palindrome or not and
-// Reverse the number and then checks for palindrome.
+// Checks for phrase palindrome and Reverse the number then checks for palindrome.
 // --------------------------------------------------------------------------------
 #include <ctype.h>
 #include <stdbool.h>
@@ -15,12 +14,10 @@
 bool CheckPhrasePalindrome (const char* phrase) {
    if (phrase == NULL) return 0;   // Not a palindrome
    char onlyAlphaNum[256] = "";
-   int j = 0;
+   int j = 0, start = 0, end = j - 1;
    // Filter out non-alphanumeric characters and convert to lowercase
    for (int i = 0; phrase[i] != '\0'; i++) if (isalnum (phrase[i])) onlyAlphaNum[j++] = tolower (phrase[i]);
    onlyAlphaNum[j] = '\0';
-   int start = 0;
-   int end = j - 1;
    while (start < end) {
       if (onlyAlphaNum[start] != onlyAlphaNum[end]) return false;
       start++;
@@ -30,8 +27,6 @@ bool CheckPhrasePalindrome (const char* phrase) {
 }
 
 bool ReverseAndCheckOverflow (int number, int* reversedNumber) {
-   // Check if the input number is within valid int range
-   //if (number < INT_MIN || number > INT_MAX) return true;   // Input overflow
    *reversedNumber = 0;
    while (number > 0) {
       int digit = number % 10;
