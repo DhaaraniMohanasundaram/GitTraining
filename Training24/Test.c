@@ -11,7 +11,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include <ctype.h>
 #include "Header.h"
 
 #define RED "\x1b[31m"
@@ -37,7 +37,7 @@ int main () {
          "3. Exit\n"
          "\nEnter your choice (1-3): ");
       if (fgets (input, sizeof (input), stdin) != NULL) {
-         int len = (int) strlen (input);
+         int len = (int)strlen (input);
          if (len > 0 && input[len - 1] != '\n') while (getchar () != '\n');
       }
       int choice = atoi (input);
@@ -63,25 +63,18 @@ void TestCases () {
       "\t|    UNSORTED  ARRAY    |     SORTED  ARRAY     | ELEMENT SEARCH | ACTUAL INDEX | RESULT |\n"
       "\t+-----------------------+-----------------------+----------------+--------------+--------+\n");
    for (int i = 0; i < 5; i++) {
-      int n = sizes[i], searchElement = expectedIndex[i][0];
+      int n = sizes[i], searchElement = expectedIndex[i][0], k = 0;
       for (int j = 0; j < n; j++) sortedArr[j] = testCases[i][j];
       BubbleSort (sortedArr, n);
       int actualIndex = BinarySearch (sortedArr, n, searchElement);
-      bool sortingTestPass = true;
-      for (int j = 0; j < n; j++) {
-         if (sortedArr[j] != expectedSorted[i][j]) {
-            sortingTestPass = false;
-            break;
-         }
-      }
+      for (k = 0; k < n; k++) if (sortedArr[k] != expectedSorted[i][k]) break;
       printf ("\t|  [ ");
       for (int j = 0; j < n; j++) printf ("%d ", testCases[i][j]);
       printf ("]  |  [ ");
       for (int j = 0; j < n; j++) printf ("%d ", sortedArr[j]);
       printf ("]  |  %-13d |  %-11d |  %-14s |\n",
-         searchElement, actualIndex,
-         (actualIndex == expectedIndex[i][1] && sortingTestPass) ?
-         GREEN "PASS" RESET : RED "FAIL" RESET);
+               searchElement, actualIndex,
+               k == n && actualIndex == expectedIndex[i][1] ? GREEN "PASS" RESET : RED "FAIL" RESET);
       printf ("\t+-----------------------+-----------------------+----------------+--------------+--------+\n");
    }
 }
@@ -94,12 +87,12 @@ int GetUserInput (const char* input) {
       buff[strcspn (buff, "\n")] = 0;
       char* endptr;
       errno = 0;
-      long number = strtol (buff, &endptr, 10);
+      int number = strtol (buff, &endptr, 10);
       if (endptr == buff || *endptr != '\0' || errno == ERANGE) {
          printf (RED "Invalid input (Out of Range or Not a number). Please try again.\n" RESET);
          continue;
       }
-      return (int)number;
+      return number;
    }
 }
 
@@ -117,20 +110,25 @@ void ExecuteUserInput () {
       printf ("\nUnsorted Array: [ ");
       for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
       BubbleSort (arr, n);
-      printf ("]\n" "\nSorted Array: [ ");
+      printf ("]\n\nSorted Array: [ ");
       for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
       printf ("]\n");
       input = GetUserInput ("\nEnter the element to search: ");
       int searchResult = BinarySearch (arr, n, input);
-      printf (searchResult != -1 ? "\nElement %d is found at index %d.\n"
-         : "\nElement %d is not found in array.\n", input, searchResult);
+      printf (searchResult != -1 ? "\nElement %d is found at index %d.\n" : "\nElement %d is not found in array.\n", input, searchResult);
       while (1) {
          printf ("\nDo you want to continue? (y/n): ");
          if (!fgets (buffer, sizeof (buffer), stdin)) return;
          buffer[strcspn (buffer, "\n")] = 0;
-         choice = buffer[0];
-         if (choice == 'y' || choice == 'Y' || choice == 'n' || choice == 'N') break;
-         printf (RED "Invalid input. Please enter 'y' or 'n'.\n" RESET);
+         int i = 0;
+         while (isspace (buffer[i])) {
+            i++;
+         }
+         if ((buffer[i] == 'y' || buffer[i] == 'Y' || buffer[i] == 'n' || buffer[i] == 'N') && buffer[i + 1] == '\0') {
+            choice = buffer[i];
+            break;  // Valid input, exit the loop
+         }
+         printf (RED "Invalid input. Please enter only a single 'y' or 'n'.\n" RESET);
       }
       if (choice == 'n' || choice == 'N') {
          printf (BLUE "\n\tEXITING USER INPUT.......!!\n" RESET);
