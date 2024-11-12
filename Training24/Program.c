@@ -8,18 +8,17 @@
 // Checks for phrase palindrome and Reverse the number then checks for palindrome.
 // --------------------------------------------------------------------------------
 #include <ctype.h>
+#include <string.h> 
 #include <stdbool.h>
 #include <limits.h>
 
-bool CheckPhrasePalindrome (const char* phrase) {
-   if (phrase == NULL) return 0;   // Not a palindrome
-   char onlyAlphaNum[256] = "";
-   int j = 0, start = 0, end = j - 1;
-   // Filter out non-alphanumeric characters and convert to lowercase
-   for (int i = 0; phrase[i] != '\0'; i++) if (isalnum (phrase[i])) onlyAlphaNum[j++] = tolower (phrase[i]);
-   onlyAlphaNum[j] = '\0';
+bool IsPhrasePalindrome (const char* phrase) {
+   if (phrase == NULL) return false;  // Not a palindrome
+   size_t start = 0, end = strlen (phrase) - 1;
    while (start < end) {
-      if (onlyAlphaNum[start] != onlyAlphaNum[end]) return false;
+      while (start < end && !isalnum (phrase[start])) start++;
+      while (start < end && !isalnum (phrase[end])) end--;
+      if (tolower (phrase[start]) != tolower (phrase[end])) return false;
       start++;
       end--;
    }
@@ -31,15 +30,15 @@ bool ReverseAndCheckOverflow (int number, int* reversedNumber) {
    while (number > 0) {
       int digit = number % 10;
       // Check for overflow before reversing the number
-      if (*reversedNumber > (INT_MAX - digit) / 10) return true;   // Indicate overflow during reversal
+      if (*reversedNumber > (INT_MAX - digit) / 10) return false;   // Indicate overflow during reversal
       *reversedNumber = *reversedNumber * 10 + digit;
       number /= 10;
    }
-   return false; // No overflow
+   return true;   // No overflow
 }
 
-bool IsNumPalindrome (int number) {
-   if (number < 0) return false; // Negative numbers are not palindromes
+bool IsIntPalindrome (int number) {
+   if (number < 0) return false;   // Negative numbers are not palindromes
    int reversedNumber;
-   return !ReverseAndCheckOverflow (number, &reversedNumber) && (number == reversedNumber);
+   return ReverseAndCheckOverflow (number, &reversedNumber) && (number == reversedNumber);
 }

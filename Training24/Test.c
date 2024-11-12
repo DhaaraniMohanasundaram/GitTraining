@@ -21,29 +21,29 @@
 #define RESET "\x1b[0m"
 
 /// <summary>Test and print results for palindrome checker with phrases.</summary>
-void TestPhrasePalindromes ();
+void TestPalindromes ();
 
 /// <summary>Test and print results for reversed number palindrome.</summary>
-void TestReverseNumbers ();
+void TestReversal ();
 
 /// <summary>Print the table header for phrase and Integer testcases.</summary>
 void PrintTableHeader (enum HeaderType type);
 
 /// <summary>Print a single row in the table for phrase.</summary>
-void PhraseTableRow (const char* input, const char* expectedOutput, const char* actualOutput, const char* result);
+void PrintPhraseTableRow (const char* input, const char* expectedOutput, const char* actualOutput, const char* result);
 
 /// <summary>Print a single row in the table for integer.</summary>
-void IntegerTableRow (int number, const char* outputStr, const char* actualOutput, const char* expectedOutput);
+void PrintIntegerTableRow (int number, const char* outputStr, const char* actualOutput, const char* expectedOutput, const char* testCase);
 
 /// <summary>Test the user input for phrase palindrome.</summary>
-void TestUserPhrase ();
+void GetUserPhrase ();
 
 /// <summary>Test the user input for reverse number palindrome.</summary>
-void TestUserInteger ();
+void GetUserInteger ();
 
 int main () {
-   TestPhrasePalindromes ();
-   TestReverseNumbers ();
+   TestPalindromes ();
+   TestReversal ();
    printf ("\n1. In Phrase, empty strings and whitespaces are considered as palindrome.\n"
       "2. In Phrase test, non-alphanumeric characters are filtered out.\n"
       "3. In Integers, negative integers are invalid because they're not a palindrome.\n");
@@ -55,19 +55,25 @@ int main () {
          continue;
       }
       char* start = option;
-      while (isspace (*start)) start++;
-      switch (*start) {
-      case '1':
-         printf (CYAN "\n\t   -------------  TESTING PHRASE PALINDROME  -------------\n" RESET);
-         TestUserPhrase (); break;
-      case '2':
-         printf (CYAN "\n\t   -------------  TESTING INTEGER PALINDROME  -------------\n" RESET);
-         TestUserInteger (); break;
-      case '3':
-         printf ("\nExiting program.\n"); return 0;
-      default:
-         printf ("Invalid choice. Please enter 1, 2, or 3.\n"); break;
+      while (*start && isspace (*start)) start++;
+      char* end = start + strlen (start) - 1;
+      while (end > start && isspace (*end)) end--;
+      *(end + 1) = '\0';
+      if (strlen (start) == 1 && (*start == '1' || *start == '2' || *start == '3')) {
+         int choice = *start - '0';
+         switch (choice) {
+         case 1:
+            printf (CYAN "\n   -------------  TESTING PHRASE PALINDROME  -------------\n" RESET);
+            GetUserPhrase (); break;
+         case 2:
+            printf (CYAN "\n   -------------  TESTING INTEGER PALINDROME  -------------\n" RESET);
+            GetUserInteger (); break;
+         case 3:
+            printf ("\nExiting program.\n"); return 0;
+         default: break;
+         }
       }
+      else printf ("Invalid choice. Please enter 1, 2, or 3.\n");
    }
    return 0;
 }
@@ -90,97 +96,116 @@ void PrintTableHeader (enum HeaderType type) {
    }
 }
 
-void PhraseTableRow (const char* input, const char* expectedOutput, const char* actualOutput, const char* result) {
+void PrintPhraseTableRow (const char* input, const char* expectedOutput, const char* actualOutput, const char* result) {
    printf ("\t| %-20s | %-17s | %-17s | %-15s |\n", input, expectedOutput, actualOutput, result);
    printf ("\t+----------------------+-------------------+-------------------+--------+\n");
 }
 
-void IntegerTableRow (int number, const char* outputStr, const char* actualOutput, const char* expectedOutput) {
+void PrintIntegerTableRow (int number, const char* outputStr, const char* expectedOutput, const char* actualOutput, const char* testCase) {
    const char* resultStr = (strcmp (actualOutput, expectedOutput) == 0) ? GREEN "PASS" RESET : RED "FAIL" RESET;
-   printf ("\t| %-19d | %-24s | %-17s | %-17s | %-15s |\n", number, outputStr, actualOutput, expectedOutput, resultStr);
+   printf ("\t| %-19s | %-24s | %-17s | %-17s | %-15s |\n", testCase, outputStr, expectedOutput, actualOutput, resultStr);
    printf ("\t+---------------------+--------------------------+-------------------+-------------------+--------+\n");
 }
 
-void TestPhrasePalindromes () {
+void TestPalindromes () {
    PrintTableHeader (Phrase);
    const char* phrases[] = { "tacOcAT", "hello", "D", "Don't nod", "Race!Car", " ", "22 / 02 / 2022",
-      "12345678987654321", "0123456789" },
+                             "12345678987654321", "0123456789" },
       * expectedResults[] = { "Palindrome", "Not a Palindrome", "Palindrome", "Palindrome",
-      "Palindrome", "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome" };
+                              "Palindrome", "Palindrome", "Palindrome", "Palindrome", "Not a Palindrome" };
    for (int i = 0; i < sizeof (phrases) / sizeof (phrases[0]); i++) {
-      int isPhrasePalindrome = CheckPhrasePalindrome (phrases[i]);
-      const char* actualResult = isPhrasePalindrome ? "Palindrome" : "Not a Palindrome",
-         * output = (strcmp (actualResult, expectedResults[i]) == 0) ? GREEN "PASS" RESET : RED "FAIL" RESET;
-      PhraseTableRow (phrases[i], expectedResults[i], actualResult, output);
+      const char* actualResult = IsPhrasePalindrome (phrases[i]) ? "Palindrome" : "Not a Palindrome",
+         * output = !strcmp (actualResult, expectedResults[i]) ? GREEN "PASS" RESET : RED "FAIL" RESET;
+      PrintPhraseTableRow (phrases[i], expectedResults[i], actualResult, output);
    }
    printf ("\n");
 }
 
-void TestReverseNumbers () {
-   int testCases[] = { 212, -121, 12345, -9876789, 999999999, 2147447412, 2147483647, -2147483648LL }, reversedNumber;
-   const char* expectedOutputs[] = { "Palindrome", "Not a Palindrome", "Not a Palindrome",
-      "Not a Palindrome", "Palindrome", "Palindrome", "Failed to process", "Not a Palindrome" };
+void TestReversal () {
+   const char* testCases[] = { "212", "-121", "123.45", "-9876789", "999999999", "2147447412",
+                               "2147483647", "-2147483648", "123abc" },
+      * expectedOutputs[] = { "Palindrome", "Not a Palindrome", "Not a Palindrome", "Not a Palindrome", "Palindrome",
+                              "Palindrome", "Failed to process", "Not a Palindrome", "Not a Palindrome" };
    PrintTableHeader (Integer);
    for (int i = 0; i < sizeof (testCases) / sizeof (testCases[0]); i++) {
-      int number = testCases[i];
       char outputStr[256];
+      int number;
       bool overflow = false;
-      if (number < 0) IntegerTableRow (number, "Invalid(Negative number)", "Not a Palindrome", expectedOutputs[i]);
+      char* endPtr;
+      number = strtol (testCases[i], &endPtr, 10);
+      if (*endPtr != '\0') {
+         strcpy (outputStr, "Invalid(Non Integer)");
+         const char* actualOutput = "Not a Palindrome";
+         PrintIntegerTableRow (0, outputStr, expectedOutputs[i], actualOutput, testCases[i]);
+      }
       else {
-         overflow = ReverseAndCheckOverflow (number, &reversedNumber);
-         if (overflow) {
-            strcpy (outputStr, "Integer Overflow");
-            IntegerTableRow (number, outputStr, "Failed to process", expectedOutputs[i]);
+         if (number < 0) {
+            strcpy (outputStr, "Invalid(Negative number)");
+            const char* actualOutput = "Not a Palindrome";
+            PrintIntegerTableRow (number, outputStr, expectedOutputs[i], actualOutput, testCases[i]);
          }
          else {
-            sprintf (outputStr, "%d", reversedNumber);
-            const char* actualOutput = IsNumPalindrome (number) ? "Palindrome" : "Not a Palindrome";
-            IntegerTableRow (number, outputStr, actualOutput, expectedOutputs[i]);
+            overflow = ReverseAndCheckOverflow (number, &number);
+            if (!overflow) {
+               strcpy (outputStr, "Integer Overflow");
+               const char* actualOutput = "Failed to process";
+               PrintIntegerTableRow (number, outputStr, expectedOutputs[i], actualOutput, testCases[i]);
+            }
+            else {
+               sprintf (outputStr, "%d", number);
+               const char* actualOutput = IsIntPalindrome (number) ? "Palindrome" : "Not a Palindrome";
+               PrintIntegerTableRow (number, outputStr, expectedOutputs[i], actualOutput, testCases[i]);
+            }
          }
       }
    }
 }
 
-void TestUserPhrase () {
+void GetUserPhrase () {
    char userPhrase[500];
    while (1) {
-      printf ("\nEnter a phrase to test (max 499 characters, or type 'r' to return menu): ");
+      printf ("\nEnter a phrase to test (max 499 characters, or type 'r' or 'R' to return menu): ");
       if (fgets (userPhrase, sizeof (userPhrase), stdin) == NULL) {
          printf (YELLOW "Error: Input not received. Exiting function." RESET "\n");
          return;
       }
       userPhrase[strcspn (userPhrase, "\n")] = 0;
-      if (strcmp (userPhrase, "r") == 0 || strcmp (userPhrase, "R") == 0) return;   // Return to menu command
+      if (!strcmp (userPhrase, "r") || !strcmp (userPhrase, "R")) return;
       if (strlen (userPhrase) >= sizeof (userPhrase) - 1) {
          printf (YELLOW "Error: Input exceeds maximum length." RESET "\n");
          while (getchar () != '\n' && getchar () != EOF);
          continue;
       }
-      else printf ("Result: %s\n", CheckPhrasePalindrome (userPhrase) ? GREEN "It's a Palindrome" RESET : RED "Not a Palindrome" RESET);
+      if (strlen (userPhrase) == 0) {
+         printf ("Result: %s\n", GREEN "It's a Palindrome" RESET);
+         continue;
+      }
+      printf ("Result: %s\n", IsPhrasePalindrome (userPhrase)
+         ? GREEN "It's a Palindrome" RESET
+         : RED "Not a Palindrome" RESET);
    }
 }
 
-void TestUserInteger () {
+void GetUserInteger () {
    char userInput[256];
    while (1) {
-      printf ("\nEnter a positive integer to test or type 'r' to return: ");
+      printf ("\nEnter a positive integer to test or type 'r' or 'R' to return menu: ");
       if (!fgets (userInput, sizeof (userInput), stdin) || userInput[0] == '\n' || userInput == NULL) {
          printf ("Result: %s\n", YELLOW "Invalid input (Empty string)" RESET);
          continue;
       }
-      if (strcmp (userInput, "r\n") == 0 || strcmp (userInput, "R\n") == 0) return;   // Return to menu command
+      if (!strcmp (userInput, "r\n") || !strcmp (userInput, "R\n") ) return;   // Return to menu command
       char* endPtr;
-      long inputNumber = strtol (userInput, &endPtr, 10);
-      if (endPtr == userInput || *endPtr != '\n' || inputNumber < 0) {   // Check if input is valid
+      int inputNumber = strtol (userInput, &endPtr, 10);
+      if (endPtr == userInput || *endPtr != '\n' || inputNumber < 0) {
          printf ("Result: %s\n", (endPtr == userInput || *endPtr != '\n')
             ? YELLOW "Invalid (Non-integer input)" RESET
             : YELLOW "Invalid (Negative number is not a palindrome)" RESET);
          continue;
       }
-      int validNumber = (int)inputNumber,   // Cast to int after valid input
-         reversedNumber;
-      if (ReverseAndCheckOverflow (validNumber, &reversedNumber)) printf ("Result: %s\n", YELLOW "Integer overflow" RESET);
-      else printf ("Output: %d\nResult: %s\n", reversedNumber, IsNumPalindrome (validNumber)
+      int reversedNumber;
+      if (!ReverseAndCheckOverflow (inputNumber, &reversedNumber)) printf ("Result: %s\n", YELLOW "Integer overflow" RESET);
+      else printf ("Output: %d\nResult: %s\n", reversedNumber, IsIntPalindrome (inputNumber)
          ? GREEN "It's a Palindrome" RESET
          : RED "Not a Palindrome" RESET);
    }

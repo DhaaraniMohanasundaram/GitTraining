@@ -14,10 +14,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 /// <summary>Checks if a phrase is a palindrome.</summary>
-bool CheckPhrasePalindrome (const char* phrase);
+bool IsPhrasePalindrome (const char* phrase);
 
 /// <summary>Reverse the integer and check for overflow.</summary>
 bool ReverseAndCheckOverflow (int number, int* reversedNumber);
 
 /// <summary>Checks the reversed number for palindrome.</summary>
-bool IsNumPalindrome (int number);
+bool IsIntPalindrome (int number);
