@@ -26,7 +26,7 @@
 void TestCases ();
 
 /// <summary>Sorts and search for user input.</summary>
-void ExecuteUserInput ();
+void SortAndSearchUserInput ();
 
 int main () {
    char input[MAX_SIZE];
@@ -40,10 +40,15 @@ int main () {
          int len = (int)strlen (input);
          if (len > 0 && input[len - 1] != '\n') while (getchar () != '\n');
       }
-      int choice = atoi (input);
+      char* endPtr;
+      int choice = strtol (input, &endPtr, 10);
+      if (*endPtr != '\0' && !isspace (*endPtr)) {
+         printf ("Invalid choice. Please enter a valid number (1, 2, or 3).\n");
+         continue;
+      }
       switch (choice) {
       case 1: TestCases (); break;
-      case 2: ExecuteUserInput (); break;
+      case 2: SortAndSearchUserInput (); break;
       case 3: printf (MAGENTA "\n\tEXITING THE PROGRAM.....!!\n" RESET); return 0;
       default: printf ("Invalid choice. Please enter 1 or 2 or 3.\n"); break;
       }
@@ -73,8 +78,8 @@ void TestCases () {
       printf ("]  |  [ ");
       for (int j = 0; j < n; j++) printf ("%d ", sortedArr[j]);
       printf ("]  |  %-13d |  %-11d |  %-14s |\n",
-               searchElement, actualIndex,
-               k == n && actualIndex == expectedIndex[i][1] ? GREEN "PASS" RESET : RED "FAIL" RESET);
+         searchElement, actualIndex,
+         k == n && actualIndex == expectedIndex[i][1] ? GREEN "PASS" RESET : RED "FAIL" RESET);
       printf ("\t+-----------------------+-----------------------+----------------+--------------+--------+\n");
    }
 }
@@ -96,7 +101,7 @@ int GetUserInput (const char* input) {
    }
 }
 
-void ExecuteUserInput () {
+void SortAndSearchUserInput () {
    int arr[MAX_SIZE] = { 0 }, n = 0, input = 0;
    char buffer[MAX_SIZE], choice;
    printf (CYAN "\n\t       -----------------    SORTING AND SEARCHING    -----------------\n" RESET);
@@ -121,9 +126,7 @@ void ExecuteUserInput () {
          if (!fgets (buffer, sizeof (buffer), stdin)) return;
          buffer[strcspn (buffer, "\n")] = 0;
          int i = 0;
-         while (isspace (buffer[i])) {
-            i++;
-         }
+         while (isspace (buffer[i])) i++;
          if ((buffer[i] == 'y' || buffer[i] == 'Y' || buffer[i] == 'n' || buffer[i] == 'N') && buffer[i + 1] == '\0') {
             choice = buffer[i];
             break;  // Valid input, exit the loop
