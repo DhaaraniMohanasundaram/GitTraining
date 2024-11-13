@@ -65,13 +65,13 @@ void TestCases () {
                                      {-3, -3, -3, -3, 3, 3}, {5, 5, 5, 5, 5, 5, 5, 5} },
       expectedIndex[][2] = { {4, 3}, {7, 6}, {20, -1}, {3, 4}, {5, 0} },
       arrSizes[] = { 8, 7, 5, 6, 8 };
-   printf (CYAN "\n\t       -----------------    TEST CASES FOR SORTING AND SEARCHING    -----------------\n" RESET
-      "\n\t+-----------------------+-----------------------+----------------+--------------+--------+\n"
-      "\t|    UNSORTED  ARRAY    |     SORTED  ARRAY     | ELEMENT SEARCH | ACTUAL INDEX | RESULT |\n"
-      "\t+-----------------------+-----------------------+----------------+--------------+--------+\n");
+   printf (CYAN "\n          -----------------    TEST CASES FOR SORTING AND SEARCHING    -----------------\n" RESET
+      "\n   +-----------------------+-----------------------+----------------+--------------+--------+\n"
+      "   |    UNSORTED  ARRAY    |     SORTED  ARRAY     | ELEMENT SEARCH | ACTUAL INDEX | RESULT |\n"
+      "   +-----------------------+-----------------------+----------------+--------------+--------+\n");
    for (int i = 0; i < 5; i++) {
       int size = arrSizes[i], searchElement = expectedIndex[i][0], k;
-      printf ("\t|  [ ");
+      printf ("   |  [ ");
       for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);  // Print the unsorted array
       printf ("]  |  [ ");
       BubbleSort (testCases[i], size);
@@ -79,8 +79,8 @@ void TestCases () {
       int actualIndex = BinarySearch (testCases[i], size, searchElement);
       for (k = 0; k < size; k++) if (testCases[i][k] != expectedSorted[i][k]) break;
       char* result = (k == size && actualIndex == expectedIndex[i][1]) ? GREEN "PASS" RESET : RED "FAIL" RESET;
-      printf ("]  |  %-13d |  %-11d |  %-14s |\n    "
-         "    +-----------------------+-----------------------+----------------+--------------+--------+ \n", searchElement, actualIndex, result);
+      printf ("]  |  %-13d |  %-11d |  %-14s |\n   "
+         "+-----------------------+-----------------------+----------------+--------------+--------+ \n", searchElement, actualIndex, result);
    }
 }
 
@@ -101,25 +101,25 @@ int GetUserInput (const char* input) {
 }
 
 void SortAndSearchUserInput () {
-   int arr[MAX_SIZE] = { 0 }, n = 0, input = 0;
+   int arr[MAX_SIZE] = { 0 }, arrSize = 0, searchElement = 0;
    char buffer[MAX_SIZE], choice;
-   printf (CYAN "\n\t       -----------------    SORTING AND SEARCHING    -----------------\n" RESET);
+   printf (CYAN "\n          -----------------    SORTING AND SEARCHING    -----------------\n" RESET);
    while (1) {
-      n = GetUserInput ("\nHow many integers would you like to input? (max 100): ");
-      if (n <= 0 || n > MAX_SIZE) {
+      arrSize = GetUserInput ("\nHow many integers would you like to input? (max 100): ");
+      if (arrSize <= 0 || arrSize > MAX_SIZE) {
          printf (RED "Invalid number. Please enter a positive integer up to %d.\n" RESET, MAX_SIZE);
          continue;
       }
-      for (int i = 0; i < n; i++) arr[i] = GetUserInput ("\nEnter integer: ");
+      for (int i = 0; i < arrSize; i++) arr[i] = GetUserInput ("\nEnter integer: ");
       printf ("\nUnsorted Array: [ ");
-      for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
-      BubbleSort (arr, n);
+      for (int i = 0; i < arrSize; i++) printf ("%d ", arr[i]);
+      BubbleSort (arr, arrSize);
       printf ("]\n\nSorted Array: [ ");
-      for (int i = 0; i < n; i++) printf ("%d ", arr[i]);
+      for (int i = 0; i < arrSize; i++) printf ("%d ", arr[i]);
       printf ("]\n");
-      input = GetUserInput ("\nEnter the element to search: ");
-      int searchResult = BinarySearch (arr, n, input);
-      printf (searchResult != -1 ? "\nElement %d is found at index %d.\n" : "\nElement %d is not found in array.\n", input, searchResult);
+      searchElement = GetUserInput ("\nEnter the element to search: ");
+      int searchResult = BinarySearch (arr, arrSize, searchElement);
+      printf (searchResult != -1 ? "\nElement %d is found at index %d.\n" : "\nElement %d is not found in array.\n", searchElement, searchResult);
       while (1) {
          printf ("\nDo you want to continue? (y/n): ");
          if (!fgets (buffer, sizeof (buffer), stdin)) return;
@@ -132,7 +132,7 @@ void SortAndSearchUserInput () {
          printf (RED "Invalid input. Please enter only a single 'y' or 'n'.\n" RESET);
       }
       if (choice == 'n' || choice == 'N') {
-         printf (BLUE "\n\tEXITING USER INPUT.......!!\n" RESET);
+         printf (BLUE "\nEXITING USER INPUT.......!!\n" RESET);
          break;
       }
    }
