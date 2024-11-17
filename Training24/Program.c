@@ -11,34 +11,58 @@
 #include <string.h> 
 #include <stdbool.h>
 #include <limits.h>
+#include <stdlib.h>
+#include "Header.h"
 
 bool IsPhrasePalindrome (const char* phrase) {
-   if (phrase == NULL) return false;  // Not a palindrome
+   if (phrase == NULL) return false;  // NULL pointer check
    size_t start = 0, end = strlen (phrase) - 1;
    while (start < end) {
-      while (start < end && !isalnum (phrase[start])) start++;
-      while (start < end && !isalnum (phrase[end])) end--;
-      if (tolower (phrase[start]) != tolower (phrase[end])) return false;
+      if (!isalnum (phrase[start])) {
+         start++;
+         continue;
+      }
+      if (!isalnum (phrase[end])) {
+         end--;
+         continue;
+      }
+      if (tolower (phrase[start]) != tolower (phrase[end])) return false;  // Not a palindrome
       start++;
       end--;
    }
-   return true;
+   return true;  // It's a palindrome
 }
 
-bool ReverseAndCheckOverflow (int number, int* reversedNumber) {
+int IsValidInput (const char* input) {
+   if (input == NULL || input[0] == '\0') return INVALID_INPUT;
+   char* endPtr;
+   long inputNumber = strtol (input, &endPtr, 10);
+   if (*endPtr != '\0' && *endPtr != '\n') return INVALID_INPUT;
+   if (inputNumber < INT_MIN || inputNumber > INT_MAX) return OVERFLOW_ERROR;
+   return SUCCESS;
+}
+
+int ReverseAndCheckOverflow (int number, int* reversedNumber) {
    *reversedNumber = 0;
-   while (number > 0) {
+   while (number != 0) {
       int digit = number % 10;
-      // Check for overflow before reversing the number
-      if (*reversedNumber > (INT_MAX - digit) / 10) return false;   // Indicate overflow during reversal
+      if (*reversedNumber > (INT_MAX - digit) / 10) {
+         return OVERFLOW_ERROR;  // Indicate overflow during reversal
+      }
       *reversedNumber = *reversedNumber * 10 + digit;
       number /= 10;
    }
-   return true;   // No overflow
+   return SUCCESS;  // No overflow
 }
 
-bool IsIntPalindrome (int number) {
-   if (number < 0) return false;   // Negative numbers are not palindromes
-   int reversedNumber;
-   return ReverseAndCheckOverflow (number, &reversedNumber) && (number == reversedNumber);
+int IsIntPalindrome (int number) {
+   if (number < 0) {
+      return NEGATIVE_NUMBER;  // Negative numbers are never palindromes
+   }
+   int reversedNumber = 0;
+   int result = ReverseAndCheckOverflow (number, &reversedNumber);
+   if (result == OVERFLOW_ERROR) {
+      return OVERFLOW_ERROR;
+   }
+   return (number == reversedNumber) ? PALINDROME : NOT_PALINDROME;
 }

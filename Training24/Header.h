@@ -13,11 +13,21 @@
 #define HEADER_H
 #define _CRT_SECURE_NO_WARNINGS
 
+#define INVALID_INPUT -3
+#define OVERFLOW_ERROR -2
+#define NEGATIVE_NUMBER -1
+#define SUCCESS 1
+#define PALINDROME 2
+#define NOT_PALINDROME 3
+
 /// <summary>Checks if a phrase is a palindrome.</summary>
 bool IsPhrasePalindrome (const char* phrase);
 
 /// <summary>Reverse the integer and check for overflow.</summary>
-bool ReverseAndCheckOverflow (int number, int* reversedNumber);
+int ReverseAndCheckOverflow (int number, int* reversedNumber);
 
 /// <summary>Checks the reversed number for palindrome.</summary>
-bool IsIntPalindrome (int number);
+int IsIntPalindrome (int number);
+
+/// <summary>Checks if the input is valid (integer and non-empty).</summary>
+int IsValidInput (const char* input);
