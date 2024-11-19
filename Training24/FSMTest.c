@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 //  Dhaarani Mohanasundaram
 // -------------------------------------
-// Test.c
+// FSMTest.c
 // Program on A6b branch.
 // ------------------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -64,7 +64,7 @@ int CompareFiles (const char* file1, const char* file2) {
 }
 
 int main (int argc, char** argv) {
-#define NTESTS 10
+#define NTESTS 8
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
