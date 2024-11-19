@@ -9,6 +9,7 @@
 // --------------------------------------------------------------------------------------
 #pragma once
 #pragma warning (disable:4996)
+#include <stdbool.h>
 
 #define HEADER_H
 #define _CRT_SECURE_NO_WARNINGS

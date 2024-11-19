@@ -1,7 +1,7 @@
 // --------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-//  Dhaarani Mohanasundaram
+// Dhaarani Mohanasundaram
 // --------------------------------------------------------------------------------
 // Program.c
 // Program on branch A4.
@@ -36,19 +36,18 @@ bool IsPhrasePalindrome (const char* phrase) {
 int IsValidInput (const char* input) {
    if (input == NULL || input[0] == '\0') return INVALID_INPUT;
    char* endPtr;
-   long inputNumber = strtol (input, &endPtr, 10);
+   int inputNumber = strtol (input, &endPtr, 10);
    if (*endPtr != '\0' && *endPtr != '\n') return INVALID_INPUT;
    if (inputNumber < INT_MIN || inputNumber > INT_MAX) return OVERFLOW_ERROR;
    return SUCCESS;
 }
 
 int ReverseAndCheckOverflow (int number, int* reversedNumber) {
+   if (number < 0) return NEGATIVE_NUMBER;  // Negative numbers are not palindromes
    *reversedNumber = 0;
    while (number != 0) {
       int digit = number % 10;
-      if (*reversedNumber > (INT_MAX - digit) / 10) {
-         return OVERFLOW_ERROR;  // Indicate overflow during reversal
-      }
+      if (*reversedNumber > (INT_MAX - digit) / 10) return OVERFLOW_ERROR;  // Indicate overflow during reversal
       *reversedNumber = *reversedNumber * 10 + digit;
       number /= 10;
    }
@@ -56,13 +55,8 @@ int ReverseAndCheckOverflow (int number, int* reversedNumber) {
 }
 
 int IsIntPalindrome (int number) {
-   if (number < 0) {
-      return NEGATIVE_NUMBER;  // Negative numbers are never palindromes
-   }
    int reversedNumber = 0;
    int result = ReverseAndCheckOverflow (number, &reversedNumber);
-   if (result == OVERFLOW_ERROR) {
-      return OVERFLOW_ERROR;
-   }
+   if (result == OVERFLOW_ERROR) return OVERFLOW_ERROR;
    return (number == reversedNumber) ? PALINDROME : NOT_PALINDROME;
 }
