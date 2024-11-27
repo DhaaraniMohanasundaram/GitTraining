@@ -10,7 +10,6 @@
 // ------------------------------------------------------------------------------------
 #pragma once
 
-#ifndef CHESS_BOARD_HANDLER_H
 #define CHESS_BOARD_HANDLER_H
 
 #include <cstdio>
@@ -20,5 +19,3 @@ wchar_t GetPieceAtPosition (int row, int col);
 
 ///<summary>Prints the complete chessboard to a specified output stream (file or console).</summary>
 void DisplayChessboard (FILE* outputStream);
-
-#endif // CHESS_BOARD_HANDLER_H
