@@ -15,7 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hello.c">
+    <ClCompile Include="CoinReturn.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CoinReturn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCoinReturn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
