@@ -15,7 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hello.c">
+    <ClCompile Include="Complex.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Complex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestComplex.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
