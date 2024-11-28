@@ -9,13 +9,16 @@
 //     an actual chess board in the console window using Unicode.
 // ------------------------------------------------------------------------------------
 #pragma once
-
+#pragma warning (disable:4996)
 #define CHESS_BOARD_HANDLER_H
 
 #include <cstdio>
 
-///<summary>Determines the type of piece to be displayed at a given position on the board.</summary>
-wchar_t GetPieceAtPosition (int row, int col);
+///<summary>Determines the type of chess piece to be displayed at a given position on the board.</summary>
+wchar_t PrintPieceAtPosition (int row, int col);
 
-///<summary>Prints the complete chessboard to a specified output stream (file or console).</summary>
+///<summary>Prints the complete chessboard to a specified output(file or console).</summary>
 void DisplayChessboard (FILE* outputStream);
+
+///<summary>Compares two files character by character and checks for differences.</summary>
+int CompareFilesContent (FILE* expectedFile, FILE* actualFile, int* row, int* col);
