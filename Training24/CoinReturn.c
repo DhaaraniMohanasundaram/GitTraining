@@ -6,32 +6,24 @@
 // CoinReturn.c
 // Program on Test2.2 branch.
 // ------------------------------------------------------------------------------------
-#include <stdio.h>
 #include "CoinReturn.h"
 
-void calculateChange (int paidAmount, int actualAmount) {
+void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned) {
    if (paidAmount < actualAmount) {
-      printf ("Insufficient amount paid.\n");
+      coinsReturned[0] = -1;   // Insufficient amount paid
       return;
    }
-   int change = paidAmount - actualAmount;
-   int coins[] = { 10, 5, 2, 1 };
-   int coinCount[4] = { 0 };
+   int change = paidAmount - actualAmount,
+      coins[] = { 10, 5, 2, 1 },
+      coinCount[4] = { 0 };
    for (int i = 0; i < 4; i++) {
       coinCount[i] = change / coins[i];
       change = change % coins[i];
    }
    if (paidAmount == actualAmount) {
-      printf ("Change to be returned: 0\n");
+      coinsReturned[0] = 0;   // No change needed
       return;
    }
-   printf ("Change to be returned: %d\n", paidAmount - actualAmount);
-   int totalCoins = 0;
-   for (int i = 0; i < 4; i++) {
-      if (coinCount[i] > 0) {
-         printf ("%d x Rs.%d\n", coinCount[i], coins[i]);
-         totalCoins += coinCount[i];
-      }
-   }
-   printf ("Total coins returned: %d\n", totalCoins);
+   coinsReturned[0] = paidAmount - actualAmount;
+   for (int i = 0; i < 4; i++) coinsReturned[i + 1] = coinCount[i];
 }

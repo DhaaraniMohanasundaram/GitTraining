@@ -12,4 +12,5 @@
 #pragma disable warning 4996
 #define COIN_RETURN_H
 
-void calculateChange (int paidAmount, int actualAmount);
+/// <summary>Calculates the change and stores the coin counts in the coinsReturned.</summary>
+void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned);
