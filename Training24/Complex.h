@@ -12,8 +12,7 @@
 #define COMPLEX_H
 
 typedef struct {
-   float real;
-   float img;
+   float Real, Img;
 } ComplexNumber;
 
 /// <summary>To add two complex numbers.</summary>

@@ -10,21 +10,25 @@
 #include "Complex.h"
 
 ComplexNumber Add (ComplexNumber a, ComplexNumber b) {
-   return (ComplexNumber) { a.real + b.real, a.img + b.img };
+   return (ComplexNumber) { a.Real + b.Real, a.Img + b.Img };
 }
 
 ComplexNumber Subtract (ComplexNumber a, ComplexNumber b) {
-   return (ComplexNumber) { a.real - b.real, a.img - b.img };
+   return (ComplexNumber) { a.Real - b.Real, a.Img - b.Img };
 }
 
 ComplexNumber Multiply (ComplexNumber a, ComplexNumber b) {
-   return (ComplexNumber) { a.real* b.real - a.img * b.img, a.real* b.img + a.img * b.real };
+   return (ComplexNumber) {
+      a.Real* b.Real - a.Img * b.Img, a.Real* b.Img + a.Img * b.Real
+   };
 }
 
 ComplexNumber Conjugate (ComplexNumber a) {
-   return (ComplexNumber) { a.real, -a.img };
+   return (ComplexNumber) {
+      a.Real, -a.Img
+   };
 }
 
 float Modulus (ComplexNumber a) {
-   return sqrt (a.real * a.real + a.img * a.img);
+   return sqrt (a.Real * a.Real + a.Img * a.Img);
 }
