@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdbool.h>
+#include <conio.h> 
 #include "Header.h"
 
 #define RED "\x1b[31m"
@@ -22,8 +22,11 @@
 #define RESET "\x1b[0m"
 #define MAX_SIZE 100
 
-/// <summary>Runs few testcases automatically.</summary>
-void TestCases ();
+/// <summary>Run test for sortiing array.</summary>
+void TestSorting ();
+
+/// <summary>Run test for searching element in sorted array.</summary>
+void TestSearching ();
 
 /// <summary>Gets valid user input.</summary>
 int GetUserInput (const char* input);
@@ -32,61 +35,82 @@ int GetUserInput (const char* input);
 void SortAndSearchUserInput ();
 
 int main () {
-   char input[MAX_SIZE];
+   char choice;
    while (1) {
       printf ("\nChoose an option:\n"
          "1. Run Test Cases\n"
          "2. Enter User Input\n"
          "3. Exit\n"
          "\nEnter your choice (1-3): ");
-      if (fgets (input, sizeof (input), stdin) != NULL) {
-         int len = (int)strlen (input);
-         if (len > 0 && input[len - 1] != '\n') while (getchar () != '\n');
-      }
-      char* endPtr;
-      int choice = strtol (input, &endPtr, 10);
-      if (*endPtr != '\0' && !isspace (*endPtr)) {
-         printf ("Invalid choice. Please enter a valid number (1, 2, or 3).\n");
-         continue;
-      }
+      choice = getche ();
+      printf ("\n");
       switch (choice) {
-      case 1: TestCases (); break;
-      case 2: SortAndSearchUserInput (); break;
-      case 3: printf (MAGENTA "\n\tEXITING THE PROGRAM.....!!\n" RESET); return 0;
-      default: printf ("Invalid choice. Please enter 1 or 2 or 3.\n"); break;
+      case '1': TestSorting (); TestSearching (); break;
+      case '2': SortAndSearchUserInput (); break;
+      case '3': printf (MAGENTA "\n   EXITING THE PROGRAM.....!!\n" RESET); return 0;
+      default: printf (RED "\nInvalid choice. Please enter 1, 2, or 3.\n" RESET); break;
       }
    }
 }
 
-void TestCases () {
-   int testCases[][MAX_SIZE] = { {1, 2, 3, 4, 5, 6, 7, 8}, {0, -3, 1, 3, 5, 7, -9}, {10, -20, -30, 40, 0},
-                                 {3, -3, 3, -3, -3, -3}, {5, 5, 5, 5, 5, 5, 5, 5} },
-      expectedSorted[][MAX_SIZE] = { {1, 2, 3, 4, 5, 6, 7, 8}, {-9, -3, 0, 1, 3, 5, 7}, {-30, -20, 0, 10, 40},
-                                     {-3, -3, -3, -3, 3, 3}, {5, 5, 5, 5, 5, 5, 5, 5} },
-      expectedIndex[][2] = { {4, 3}, {7, 6}, {20, -1}, {3, 4}, {5, 0} },
-      arrSizes[] = { 8, 7, 5, 6, 8 };
-   printf (CYAN "\n          -----------------    TEST CASES FOR SORTING AND SEARCHING    -----------------\n" RESET
-      "\n   +-----------------------+-----------------------+----------------+--------------+--------+\n"
-      "   |    UNSORTED  ARRAY    |     SORTED  ARRAY     | ELEMENT SEARCH | ACTUAL INDEX | RESULT |\n"
-      "   +-----------------------+-----------------------+----------------+--------------+--------+\n");
+void TestSorting () {
+   int testCases[][MAX_SIZE] = {
+      {1, 2, 3, 4, 5, 6, 7, 8},
+      {0, -3, 1, 3, 5, 7, -9},
+      {10, -20, -30, 40, 0},
+      {3, -3, 3, -3, -3, -3},
+      {5, 5, 5, 5, 5, 5, 5, 5},
+   },
+   arrSizes[] = { 8, 7, 5, 6, 8 };
+   printf (CYAN "\n   ----- TEST CASES FOR SORTING -----\n" RESET);
    for (int i = 0; i < 5; i++) {
-      int size = arrSizes[i], searchElement = expectedIndex[i][0], k;
-      printf ("   |  [ ");
-      for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);  // Print the unsorted array
-      printf ("]  |  [ ");
+      int size = arrSizes[i];
+      printf ("\nUnsorted Array: [ ");
+      for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);
+      printf ("]\n");
       BubbleSort (testCases[i], size);
-      for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);  // Print the sorted array
+      printf ("Sorted Array: [ ");
+      for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);
+      printf ("]\n");
+      bool isSorted = true;
+      for (int k = 0; k < size - 1; k++) {
+         if (testCases[i][k] > testCases[i][k + 1]) {
+            isSorted = false;
+            break;
+         }
+      }
+      printf ("Result: %s\n", isSorted ? GREEN"PASS"RESET : RED"FAIL"RESET);
+   }
+}
+
+void TestSearching () {
+   int testCases[][MAX_SIZE] = {
+       {1, 2, 3, 4, 5, 6, 7, 8},
+       {0, -3, 1, 3, 5, 7, -9},
+       {10, -20, -30, 40, 0},
+       {3, -3, 3, -3, -3, -3},
+       {5, 5, 5, 5, 5, 5, 5, 5}
+   },
+      arrSizes[] = { 8, 7, 5, 6, 8 },
+      expectedIndex[] = { 5, 0, 1, 2, 3 },
+      searchElements[] = { 6, -9, -20, -3, 5 };
+   printf (CYAN "\n   ----- TEST CASES FOR SEARCHING -----\n" RESET);
+   for (int i = 0; i < 5; i++) {
+      int size = arrSizes[i],
+         searchElement = searchElements[i];
+      BubbleSort (testCases[i], size);
+      printf ("\nSorted Array: [ ");
+      for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);
+      printf ("]\n");
       int actualIndex = BinarySearch (testCases[i], size, searchElement);
-      for (k = 0; k < size; k++) if (testCases[i][k] != expectedSorted[i][k]) break;
-      char* result = (k == size && actualIndex == expectedIndex[i][1]) ? GREEN "PASS" RESET : RED "FAIL" RESET;
-      printf ("]  |  %-13d |  %-11d |  %-14s |\n   "
-         "+-----------------------+-----------------------+----------------+--------------+--------+ \n", searchElement, actualIndex, result);
+      printf ("Search Element: %d\n" "Actual Index: %d\n", searchElement, actualIndex);
+      printf ("Result: %s\n", actualIndex == expectedIndex[i] ? GREEN "PASS" RESET : RED "FAIL" RESET);
    }
 }
 
 int GetUserInput (const char* input) {
    char buff[MAX_SIZE];
-   while (1) {
+   while (true) {
       printf ("%s", input);
       if (!fgets (buff, sizeof (buff), stdin)) return -1;
       char* endptr;
@@ -102,7 +126,7 @@ int GetUserInput (const char* input) {
 
 void SortAndSearchUserInput () {
    int arr[MAX_SIZE] = { 0 }, arrSize = 0, searchElement = 0;
-   char buffer[MAX_SIZE], choice;
+   char choice;
    printf (CYAN "\n          -----------------    SORTING AND SEARCHING    -----------------\n" RESET);
    while (1) {
       arrSize = GetUserInput ("\nHow many integers would you like to input? (max 100): ");
@@ -122,17 +146,13 @@ void SortAndSearchUserInput () {
       printf (searchResult != -1 ? "\nElement %d is found at index %d.\n" : "\nElement %d is not found in array.\n", searchElement, searchResult);
       while (1) {
          printf ("\nDo you want to continue? (y/n): ");
-         if (!fgets (buffer, sizeof (buffer), stdin)) return;
-         int i = 0;
-         while (isspace (buffer[i])) i++;
-         if ((buffer[i] == 'y' || buffer[i] == 'Y' || buffer[i] == 'n' || buffer[i] == 'N') && buffer[i + 1] == '\n') {
-            choice = buffer[i];
-            break;  // Valid input, exit the loop
+         choice = getche ();
+         printf ("\n");
+         switch (choice) {
+         case 'y': case 'Y': break;
+         case 'n': case 'N': printf (BLUE "\nEXITING USER INPUT.......!!\n" RESET); return;
+         default: printf (RED "Invalid input. Please enter only 'y' or 'n'.\n" RESET); continue;
          }
-         printf (RED "Invalid input. Please enter only a single 'y' or 'n'.\n" RESET);
-      }
-      if (choice == 'n' || choice == 'N') {
-         printf (BLUE "\nEXITING USER INPUT.......!!\n" RESET);
          break;
       }
    }
