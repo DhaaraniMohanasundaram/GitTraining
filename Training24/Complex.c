@@ -7,7 +7,9 @@
 // Program on Test1.2 branch.
 // ------------------------------------------------------------------------------------
 #include <math.h>
+#include <stdbool.h>
 #include "Complex.h"
+#define EPSILON 0.0001
 
 ComplexNumber Add (ComplexNumber a, ComplexNumber b) {
    return (ComplexNumber) { a.Real + b.Real, a.Img + b.Img };
@@ -31,4 +33,8 @@ ComplexNumber Conjugate (ComplexNumber a) {
 
 float Modulus (ComplexNumber a) {
    return sqrt (a.Real * a.Real + a.Img * a.Img);
+}
+
+bool IsEqual (ComplexNumber c1, ComplexNumber c2) {
+   return (fabs (c1.Real - c2.Real) < EPSILON) && (fabs (c1.Img - c2.Img) < EPSILON);
 }
