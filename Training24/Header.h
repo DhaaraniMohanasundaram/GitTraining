@@ -12,10 +12,12 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 #define HEADER_H
-#define ELEMENT_NOT_FOUND -1 
 
 /// <summary>Sorts the array using bubble sort.</summary>
 void BubbleSort (int arr[], int n);
+
+/// <summary>Function to swap two elements in an array for bubble sort.</summary>
+void Swap (int* a, int* b);
 
 /// <summary>Performs binary search on a sorted array.</summary>
 int BinarySearch (int arr[], int n, int target);

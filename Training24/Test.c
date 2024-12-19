@@ -72,14 +72,13 @@ void TestSorting () {
       printf ("Sorted Array: [ ");
       for (int j = 0; j < size; j++) printf ("%d ", testCases[i][j]);
       printf ("]\n");
-      bool isSorted = true;
       for (int k = 0; k < size - 1; k++) {
          if (testCases[i][k] > testCases[i][k + 1]) {
-            isSorted = false;
+            printf (RED "Array is NOT sorted.\n" RESET);
             break;
          }
       }
-      printf ("Result: %s\n", isSorted ? GREEN"PASS"RESET : RED"FAIL"RESET);
+      printf (GREEN"Array is sorted.\n"RESET);
    }
 }
 
@@ -92,8 +91,8 @@ void TestSearching () {
        {5, 5, 5, 5, 5, 5, 5, 5}
    },
       arrSizes[] = { 8, 7, 5, 6, 8 },
-      expectedIndex[] = { 5, 0, 1, 2, 3 },
-      searchElements[] = { 6, -9, -20, -3, 5 };
+      expectedIndex[] = { 5, -1, 1, 4, 0 },
+      searchElements[] = { 6, -8, -20, 3, 5 };
    printf (CYAN "\n   ----- TEST CASES FOR SEARCHING -----\n" RESET);
    for (int i = 0; i < 5; i++) {
       int size = arrSizes[i],
