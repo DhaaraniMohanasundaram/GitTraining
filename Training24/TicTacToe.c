@@ -9,6 +9,7 @@
 // ------------------------------------------------------------------------------------
 #pragma warning (disable:4996)
 #include <stdio.h>
+#include <stdbool.h>
 
 #define BOARD_SIZE 3
 #define WIN 1
@@ -31,24 +32,25 @@ void PrintBoard (char board[BOARD_SIZE][BOARD_SIZE]) {
 /// <summary>Checks for win, draw, or continue the game.</summary>
 int CheckGameStatus (char board[BOARD_SIZE][BOARD_SIZE], char player) {
    for (int i = 0; i < BOARD_SIZE; i++) {
+   // Check rows and columns for a win
       if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
          (board[0][i] == player && board[1][i] == player && board[2][i] == player))
          return WIN;
    }
+   // Check diagonals for a win
    if ((board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
       (board[0][2] == player && board[1][1] == player && board[2][0] == player))
       return WIN;
-   for (int i = 0; i < BOARD_SIZE; i++) {
+   for (int i = 0; i < BOARD_SIZE; i++)   // Check if there are any empty spaces left if so game continues
       for (int j = 0; j < BOARD_SIZE; j++) if (board[i][j] == ' ') return CONTINUE;
-   }
-   return DRAW;
+   return DRAW;   // No space left
 }
 
 /// <summary>Gets a valid move from the player.</summary> 
 int GetValidMove (char board[BOARD_SIZE][BOARD_SIZE], char player) {
    char input[10];
    int move;
-   while (1) {
+   while (true) {
       printf ("\nPlayer %c, enter a move (1-9): ", player);
       fgets (input, sizeof (input), stdin);
       if (input[0] < '1' || input[0] > '9' || input[1] != '\0' && input[1] != '\n') {
@@ -56,37 +58,34 @@ int GetValidMove (char board[BOARD_SIZE][BOARD_SIZE], char player) {
          continue;
       }
       move = input[0] - '0';
-      int row = (move - 1) / BOARD_SIZE,
-         col = (move - 1) % BOARD_SIZE;
-      if (board[row][col] == ' ') return move;
+      int row = (move - 1) / BOARD_SIZE, col = (move - 1) % BOARD_SIZE;
+      if (board[row][col] == ' ') return move;   // Check if the selected spot is available then move
       printf ("That spot is already taken! Please choose another spot.\n");
    }
 }
 
 /// <summary>Starts two player TicTacToe game.</summary>
 void StartGame () {
-   char board[BOARD_SIZE][BOARD_SIZE] = { {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '} },
-      currentPlayer = 'X';
+   char board[BOARD_SIZE][BOARD_SIZE] = { {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '} }, gameMessage[50], currentPlayer = 'X';
    int move, gameStatus;
-   while (1) {
+   while (true) {
       PrintBoard (board);
       move = GetValidMove (board, currentPlayer);
-      int row = (move - 1) / BOARD_SIZE,
-         col = (move - 1) % BOARD_SIZE;
+      int row = (move - 1) / BOARD_SIZE, col = (move - 1) % BOARD_SIZE; 
       board[row][col] = currentPlayer;
       gameStatus = CheckGameStatus (board, currentPlayer);
       if (gameStatus == WIN) {
-         PrintBoard (board);
-         printf ("Player %c wins!\n", currentPlayer);
-         break;
+         snprintf (gameMessage, sizeof (gameMessage), "Player %c wins!", currentPlayer);
+         break;  //  End the game
       }
       if (gameStatus == DRAW) {
-         PrintBoard (board);
-         printf ("It's a draw!\n");
+         snprintf (gameMessage, sizeof (gameMessage), "It's a draw!");
          break;
       }
-      currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+      currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';   // Switch to the other player
    }
+   PrintBoard (board);
+   printf ("%s\n", gameMessage);
 }
 
 int main () {
