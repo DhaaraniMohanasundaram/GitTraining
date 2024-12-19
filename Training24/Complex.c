@@ -11,7 +11,7 @@
 #include "Complex.h"
 #define EPSILON 0.0001
 
-ComplexNumber Add (ComplexNumber a, ComplexNumber b) {
+ComplexNumber Sum (ComplexNumber a, ComplexNumber b) {
    return (ComplexNumber) { a.Real + b.Real, a.Img + b.Img };
 }
 

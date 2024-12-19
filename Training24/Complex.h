@@ -20,7 +20,7 @@ typedef struct {
 } ComplexNumber;
 
 /// <summary>To add two complex numbers.</summary>
-ComplexNumber Add (ComplexNumber a, ComplexNumber b);
+ComplexNumber Sum (ComplexNumber a, ComplexNumber b);
 
 /// <summary>To subtract two complex numbers.</summary>
 ComplexNumber Subtract (ComplexNumber a, ComplexNumber b);
@@ -34,6 +34,6 @@ float Modulus (ComplexNumber a);
 /// <summary>To conjugate a complex number.</summary>
 ComplexNumber Conjugate (ComplexNumber a);
 
-/// <summary>To check if both the imaginary and real part of two complex number are equal.</summary>
+/// <summary>Checks if both imaginary and real part of two complex number are equal,within a precision defined by EPSILON.</summary>
 bool IsEqual (ComplexNumber c1, ComplexNumber c2);
 #endif
