@@ -8,22 +8,19 @@
 // ------------------------------------------------------------------------------------
 #include "CoinReturn.h"
 
-void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned) {
-   if (paidAmount < actualAmount) {
-      coinsReturned[0] = -1;   // Insufficient amount paid
-      return;
-   }
-   int change = paidAmount - actualAmount,
-      coins[] = { 10, 5, 2, 1 },
-      coinCount[4] = { 0 };
-   for (int i = 0; i < 4; i++) {
-      coinCount[i] = change / coins[i];
-      change = change % coins[i];
-   }
+void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned, int* coins, int numCoins) {
    if (paidAmount == actualAmount) {
       coinsReturned[0] = 0;   // No change needed
       return;
    }
+   if (paidAmount < actualAmount) {
+      coinsReturned[0] = -1;   // Insufficient amount paid
+      return;
+   }
+   int change = paidAmount - actualAmount;
+   for (int i = 0; i < numCoins; i++) {
+      coinsReturned[i + 1] = change / coins[i];
+      change = change % coins[i];
+   }
    coinsReturned[0] = paidAmount - actualAmount;
-   for (int i = 0; i < 4; i++) coinsReturned[i + 1] = coinCount[i];
 }

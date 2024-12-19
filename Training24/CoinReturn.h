@@ -9,8 +9,7 @@
 // change when a customer pays in cash, given the cash paid and the actual amount.
 // ------------------------------------------------------------------------------------
 #pragma once
-#pragma disable warning 4996
 #define COIN_RETURN_H
 
 /// <summary>Calculates the change and stores the coin counts in the coinsReturned.</summary>
-void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned);
+void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned, int* coins, int numCoins);
