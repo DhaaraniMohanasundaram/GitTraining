@@ -11,7 +11,6 @@
 
 /// See File: // FSMDiagram.png
 
-// Define states of the Mealy machine
 typedef enum {
    S1,  // Initial state
    S2,  // After '0' or sequence transition
@@ -20,11 +19,11 @@ typedef enum {
    S5,  // Transition state after '0'
    S6,  // Pattern continuation state
    S7   // Alternative path state
-} state;
+} State;
 
-// Function to get the next state and output based on the current state and input
-state nextMealyState (state current_state, int input, int* output) {
-   switch (current_state) {
+/// <summary>Function to get the next state and output based on the current state and input.</summary>
+State GetNextMealyState (State currentState, int input, int* output) {
+   switch (currentState) {
    case S1:   // S1: 0/0->S2, 1/0->S7
       if (input == 0) {
          *output = 0;
@@ -92,16 +91,15 @@ state nextMealyState (state current_state, int input, int* output) {
       return S1;  // Default return to initial state
    }
 }
-
-// Function to process the FSM from input file and output to output file
-int processFSM (FILE* input_file, FILE* output_file) {
-   state currentState = S1;  // Start in the initial state
+/// <summary>Function to process the FSM from input file and output to output file.</summary>
+int ProcessFSM (FILE* inputFile, FILE* outputFile) {
+   State currentState = S1;  // Start in the initial state
    int input, output = 0;
    // Read input from the file and process it until the end of file (EOF)
-   while ((input = getc (input_file)) != EOF) {
-      currentState = nextMealyState (currentState, input - '0', &output);   // Transition to the next state and calculate the output
+   while ((input = getc (inputFile)) != EOF) {
+      currentState = GetNextMealyState (currentState, input - '0', &output);   // Transition to the next state and calculate the output
       // Write the output value to the output file
-      fprintf (output_file, "%d", output);
+      fprintf (outputFile, "%d", output);
    }
    return 0;
 }
@@ -117,10 +115,10 @@ int main (int argc, char** argv) {
       printf ("Error opening file.\n");
       return 1;
    }
-   state currentState = S1;  // Start in the initial state
+   State currentState = S1;   // Start in the initial state
    int input, output = 0;
    while (fscanf (inputFile, "%1d", &input) == 1) {
-      currentState = nextMealyState (currentState, input, &output);
+      currentState = GetNextMealyState (currentState, input, &output);
       fprintf (outputFile, "%d", output);
    }
    fclose (inputFile);

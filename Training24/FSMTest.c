@@ -12,10 +12,10 @@
 #include <string.h>
 #include <windows.h>
 
-// Function to run the program with the given input and compare output with expected
+/// <summary>Function to run the program with the given input and compare output with expected.</summary>
 int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName);
 
-// Function to compare two files
+/// <summary>Function to compare two files.</summary>
 int CompareFiles (const char* file1, const char* file2);
 
 int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName) {
@@ -76,19 +76,15 @@ int main (int argc, char** argv) {
       * expectedFiles[] = { "Test1ref.txt", "Test2ref.txt", "Test3ref.txt", "Test4ref.txt", "Test5ref.txt",
       "Test6ref.txt", "Test7ref.txt", "Test8ref.txt" };
    for (int i = 0; i < NTESTS; i++) {
-      const char* inputFile = inputFiles[i],
-         * outputFile = outputFiles[i],
-         * expectedFile = expectedFiles[i];
+      const char* inputFile = inputFiles[i], * outputFile = outputFiles[i], * expectedFile = expectedFiles[i];
       printf ("Running test %d with input file: %s\n", i + 1, inputFile);
       if (RunTestProgram (argv[1], inputFile, outputFile) != 0) {
          printf ("Test %d failed to execute.\n", i + 1);
          continue;
       }
       // Compare the output with the expected reference file
-      if (CompareFiles (outputFile, expectedFile) == 0)
-         printf ("Test %d passed. Output matches expected result.\n\n", i + 1);
-      else
-         printf ("Test %d failed. Output does not match expected result.\n\n", i + 1);
+      if (CompareFiles (outputFile, expectedFile) == 0) printf ("Test %d passed. Output matches expected result.\n\n", i + 1);
+      else printf ("Test %d failed. Output does not match expected result.\n\n", i + 1);
    }
    return 0;
 }
