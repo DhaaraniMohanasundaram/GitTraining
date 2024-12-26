@@ -29,7 +29,7 @@ void PrintBoard (char board[BOARD_SIZE][BOARD_SIZE], int isReferenceBoard) {
    int num = 1;
    for (int i = 0; i < BOARD_SIZE; i++) {
       for (int j = 0; j < BOARD_SIZE; j++) {
-         if (isReferenceBoard && board[i][j] == ' ') printf (" %d ", num++);
+         if (isReferenceBoard && board[i][j] == ' ') printf (" %d ", num++);   // Prints reference board with moves
          else printf (" %c ", board[i][j]);
          if (j < BOARD_SIZE - 1) printf ("|");
       }
@@ -44,14 +44,14 @@ int CheckGameStatus (char board[BOARD_SIZE][BOARD_SIZE], char player) {
    for (int i = 0; i < BOARD_SIZE; i++) {
       if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
          (board[0][i] == player && board[1][i] == player && board[2][i] == player))
-         return WIN;
+         return WIN;   // Check rows and columns for a win
    }
    if ((board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
       (board[0][2] == player && board[1][1] == player && board[2][0] == player))
-      return WIN;
+      return WIN;   // Check diagonals for a win
    for (int i = 0; i < BOARD_SIZE; i++)
       for (int j = 0; j < BOARD_SIZE; j++)
-         if (board[i][j] == ' ') return CONTINUE;
+         if (board[i][j] == ' ') return CONTINUE;   // Check if there are any empty spaces left to continue
    return DRAW;
 }
 
