@@ -10,7 +10,8 @@
 // ------------------------------------------------------------------------------------
 #pragma once
 #pragma warning (disable:4996)
-#define CHESS_BOARD_HANDLER_H
+
+#define HEADER_H
 
 #include <cstdio>
 

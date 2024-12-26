@@ -27,22 +27,23 @@ int main () {
    errno_t fileError;
    char userChoice;
    do {
-      wprintf (L"\nDo you want to (1)Print the Chessboard, (2)Run a comparison test, or (3)Exit (Enter 1, 2, or 3): ");
+      wprintf (L"\nDo you want to (1) Print the Chessboard, (2) Run a comparison test, or (3) Exit (Enter 1, 2, or 3): ");
       userChoice = _getche ();
       while (userChoice != '1' && userChoice != '2' && userChoice != '3') {
          wprintf (L"\nInvalid choice. Please enter '1' to print the chessboard, '2' to run the comparison test, or '3' to exit: ");
          userChoice = _getche ();
       }
       wprintf (L"\n");
-      if (userChoice == '1') {
+      switch (userChoice) {
+      case '1':
          if ((fileError = fopen_s (&outputFile, "ChessboardOutput.txt", "w+,ccs=UTF-8")) != 0) {
             wprintf (L"Failed to open ChessboardOutput.txt for writing.\n");
             return -1;
          }
          DisplayChessboard (outputFile);
          fclose (outputFile);
-      }
-      else if (userChoice == '2') {
+         break;
+      case '2':
          if ((fileError = fopen_s (&outputFile, "ChessboardOutput.txt", "r+,ccs=UTF-8")) != 0 ||
             (fileError = fopen_s (&referenceFile, "ChessboardReference.txt", "r+,ccs=UTF-8")) != 0) {
             wprintf (L"Error opening files.\n");

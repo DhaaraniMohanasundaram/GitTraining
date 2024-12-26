@@ -8,25 +8,20 @@
 // Displays chess board and compares files.
 // ------------------------------------------------------------------------------------
 #include <stdio.h>
-
 wchar_t PrintPieceAtPosition (int row, int col) {
-   const wchar_t* chessBoard[8][8] = {
-       {L"♜", L"♞", L"♝", L"♛", L"♚", L"♝", L"♞", L"♜"},
-       {L"♟", L"♟", L"♟", L"♟", L"♟", L"♟", L"♟", L"♟"},
-       {L" ", L" ", L" ", L" ", L" ", L" ", L" ", L" "},
-       {L" ", L" ", L" ", L" ", L" ", L" ", L" ", L" "},
-       {L" ", L" ", L" ", L" ", L" ", L" ", L" ", L" "},
-       {L" ", L" ", L" ", L" ", L" ", L" ", L" ", L" "},
-       {L"♙", L"♙", L"♙", L"♙", L"♙", L"♙", L"♙", L"♙"},
-       {L"♖", L"♘", L"♗", L"♕", L"♔", L"♗", L"♘", L"♖"}
-   };
-   return chessBoard[row][col][0];
+   const wchar_t* blackPieces[8] = { L"♜", L"♞", L"♝", L"♛", L"♚", L"♝", L"♞", L"♜" },
+      * whitePieces[8] = { L"♖", L"♘", L"♗", L"♕", L"♔", L"♗", L"♘", L"♖" };
+   return (row == 0) ? blackPieces[col][0] :
+      (row == 1) ? L"♟"[0] :
+      (row == 6) ? L"♙"[0] :
+      (row == 7) ? whitePieces[col][0] :
+      L' ';
 }
 
 void DisplayChessboard (FILE* outputStream) {
    const wchar_t* topBorder = L"┏━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┳━━━┓",
-   * rowSeparator = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫",
-   * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛";
+      * rowSeparator = L"┣━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━╋━━━┫",
+      * bottomBorder = L"┗━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┻━━━┛";
    fwprintf (outputStream, L"%s\n", topBorder);
    wprintf (L"%s\n", topBorder);
    for (int row = 0; row < 8; row++) {
@@ -60,7 +55,5 @@ int CompareFilesContent (FILE* expectedFile, FILE* actualFile, int* row, int* co
          *col = 1;
       }
    }
-   if (getwc (expectedFile) != WEOF) return -1;
-   if (getwc (actualFile) != WEOF) return -2;
-   return 0;  // Files match
+   return (getwc (expectedFile) != WEOF) ? -1 : (getwc (actualFile) != WEOF) ? -2 : 0;  // Early termination or Files match
 }
