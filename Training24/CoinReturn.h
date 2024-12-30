@@ -9,7 +9,9 @@
 // change when a customer pays in cash, given the cash paid and the actual amount.
 // ------------------------------------------------------------------------------------
 #pragma once
-#define COIN_RETURN_H
+#define COINRETURN_H
+
+#include <stdbool.h> 
 
 /// <summary>Calculates the change and stores the coin counts in the coinsReturned.</summary>
-void CalculateChange (int paidAmount, int actualAmount, int* coinsReturned, int* coins, int numCoins);
+bool CalculateChange (int paidAmount, int actualAmount, int* coinsReturned, int* coins, int numCoins);
