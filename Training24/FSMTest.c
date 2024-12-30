@@ -1,21 +1,22 @@
 // ------------------------------------------------------------------------------------
 // Training ~ A training program for new joiners at Metamation, Batch - July 2024.
 // Copyright (c) Metamation India.
-//  Dhaarani Mohanasundaram
+// Dhaarani Mohanasundaram
 // -------------------------------------
 // FSMTest.c
 // Program on A6b branch.
 // ------------------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS 1
+
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
 
-/// <summary>Function to run the program with the given input and compare output with expected.</summary>
+/// <summary>To run the program with the given input and compare output with expected.</summary>
 int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName);
 
-/// <summary>Function to compare two files.</summary>
+/// <summary>To compare two files.</summary>
 int CompareFiles (const char* file1, const char* file2);
 
 int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAndName, const char* outputFilePathAndName) {
@@ -25,11 +26,9 @@ int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAnd
       return 1;
    }
    sprintf (cmdline, "%s %s %s", exeFilePathAndName, inputFilePathAndName, outputFilePathAndName);
-   STARTUPINFOA si;
-   PROCESS_INFORMATION pi;
-   ZeroMemory (&si, sizeof (si));
+   STARTUPINFOA si = { 0 };
    si.cb = sizeof (si);
-   ZeroMemory (&pi, sizeof (pi));
+   PROCESS_INFORMATION pi = { 0 };
    if (!CreateProcessA (NULL, cmdline, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
       printf ("Failed to start process. Error: %lu\n", GetLastError ());
       free (cmdline);
@@ -64,27 +63,30 @@ int CompareFiles (const char* file1, const char* file2) {
 }
 
 int main (int argc, char** argv) {
-#define NTESTS 8
    if (argc != 2) {
       printf ("Usage: %s <FSM executable name>\n", argv[0]);
       return -1;
    }
-   const char* inputFiles[] = { "Test1in.txt", "Test2in.txt", "Test3in.txt", "Test4in.txt", "Test5in.txt",
-      "Test6in.txt", "Test7in.txt", "Test8in.txt" },
-      * outputFiles[] = { "Test1out.txt", "Test2out.txt", "Test3out.txt", "Test4out.txt", "Test5out.txt",
-      "Test6out.txt", "Test7out.txt", "Test8out.txt"},
-      * expectedFiles[] = { "Test1ref.txt", "Test2ref.txt", "Test3ref.txt", "Test4ref.txt", "Test5ref.txt",
-      "Test6ref.txt", "Test7ref.txt", "Test8ref.txt" };
-   for (int i = 0; i < NTESTS; i++) {
-      const char* inputFile = inputFiles[i], * outputFile = outputFiles[i], * expectedFile = expectedFiles[i];
+   const char* folderPath = "TData/",
+      * inputFiles[] = { "TData/Test1in.txt", "TData/Test2in.txt", "TData/Test3in.txt", "TData/Test4in.txt",
+         "TData/Test5in.txt", "TData/Test6in.txt", "TData/Test7in.txt", "TData/Test8in.txt" },
+      * expectedFiles[] = { "TData/Test1ref.txt", "TData/Test2ref.txt", "TData/Test3ref.txt", "TData/Test4ref.txt",
+         "TData/Test5ref.txt", "TData/Test6ref.txt", "TData/Test7ref.txt", "TData/Test8ref.txt" };
+   int numTests = sizeof (inputFiles) / sizeof (inputFiles[0]);
+   for (int i = 0; i < numTests; i++) {
+      const char* inputFile = inputFiles[i], * expectedFile = expectedFiles[i];
+      // Generate a temporary output file name for each test
+      char outputFile[50];
+      sprintf (outputFile, "temp%d.txt", i + 1);
       printf ("Running test %d with input file: %s\n", i + 1, inputFile);
+      // Run the program with the given input and the generated temporary output file
       if (RunTestProgram (argv[1], inputFile, outputFile) != 0) {
          printf ("Test %d failed to execute.\n", i + 1);
          continue;
       }
-      // Compare the output with the expected reference file
       if (CompareFiles (outputFile, expectedFile) == 0) printf ("Test %d passed. Output matches expected result.\n\n", i + 1);
       else printf ("Test %d failed. Output does not match expected result.\n\n", i + 1);
+      remove (outputFile);
    }
    return 0;
 }
