@@ -27,11 +27,11 @@ State GetNextMealyState (State currentState, int input, int* output) {
    case S1: *output = 0; return (input == 0) ? S2 : S7;
    case S2: *output = 0; return (input == 0) ? S2 : S3;
    case S3: *output = 0; return (input == 0) ? S2 : S4;
-   case S4: *output = (input == 0) ? 1 : 0; return (input == 0) ? S5 : S6;
+   case S4: *output = !input; return (input == 0) ? S5 : S6;
    case S5: *output = (input == 0) ? 0 : 1; return (input == 0) ? S2 : S3;
    case S6: *output = 0; return (input == 0) ? S5 : S6;
    case S7: *output = 0; return (input == 0) ? S2 : S6;
-   default: return S1;
+   default:  printf ("Error: Invalid input encountered. Exiting.\n"); exit (1);
    }
 }
 
@@ -39,9 +39,9 @@ State GetNextMealyState (State currentState, int input, int* output) {
 int ProcessFSM (FILE* inputFile, FILE* outputFile) {
    State currentState = S1;
    int input, output = 0;
-   // Read input from the file and process it until the end of file (EOF)
-   while ((input = getc (inputFile)) != EOF) {
-      currentState = GetNextMealyState (currentState, input - '0', &output);   // Transition to the next state and calculate the output
+   for (input = getc (inputFile); input != EOF; input = getc (inputFile)) {
+      if (input == '0' || input == '1')  currentState = GetNextMealyState (currentState, input - '0', &output);
+      else output = 0; // Non-binary characters output '0'
       fprintf (outputFile, "%d", output);
    }
    return 0;
@@ -52,18 +52,13 @@ int main (int argc, char** argv) {
       printf ("Usage: %s <input file> <output file>\n", argv[0]);
       return 1;
    }
-   FILE* inputFile = fopen (argv[1], "r");
-   FILE* outputFile = fopen (argv[2], "w");
+   // Open input and output files
+   FILE* inputFile = fopen (argv[1], "r"), * outputFile = fopen (argv[2], "w");
    if (inputFile == NULL || outputFile == NULL) {
       printf ("Error opening file.\n");
       return 1;
    }
-   State currentState = S1;   // Start in the initial state
-   int input, output = 0;
-   while (fscanf (inputFile, "%1d", &input) == 1) {
-      currentState = GetNextMealyState (currentState, input, &output);
-      fprintf (outputFile, "%d", output);
-   }
+   ProcessFSM (inputFile, outputFile);
    fclose (inputFile);
    fclose (outputFile);
    return 0;
