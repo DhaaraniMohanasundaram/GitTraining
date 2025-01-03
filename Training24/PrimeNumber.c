@@ -9,70 +9,76 @@
 // ------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h>
 
 #define PRIME 1
 #define NOT_PRIME 0
+#define RESET "\033[0m"
+#define GREEN "\033[32m"
+#define RED "\033[31m"
 
 /// <summary>To check if a number is prime.</summary>
-int PrimeChecker (int num);
+int IsPrime (int num);
 
-/// <summary>To run few test cases with PrimeChecker.</summary>
-void TestCases ();
+/// <summary>To run a few test cases with PrimeChecker using random numbers.</summary>
+void RunTestCases ();
 
-/// <summary>To check PrimeChecker with user input.</summary>
+/// <summary>To check for prime with user input.</summary>
 void CheckPrimeForUserInput ();
 
 int main () {
-   TestCases ();
+   RunTestCases ();
    CheckPrimeForUserInput ();
    return 0;
 }
 
-int PrimeChecker (int num) {
+int IsPrime (int num) {
    if (num <= 1) return NOT_PRIME;
-   if (num == 2) return PRIME;
-   for (int i = 2; i <= num / 2; i++) {
-      if (num % i == 0) return NOT_PRIME;
-   }
+   for (int i = 2; i * i <= num; i++) if (num % i == 0) return NOT_PRIME;
    return PRIME;
 }
 
-void TestCases () {
-   int testNumbers[] = { 113, 15, 2, 1, 29 },
-   expectedResults[] = { PRIME, NOT_PRIME, PRIME, NOT_PRIME, PRIME },
-   numTests = sizeof (testNumbers) / sizeof (testNumbers[0]), failedCount = 0;
-   for (int i = 0; i < numTests; i++) {
-      int num = testNumbers[i], result = PrimeChecker (num);
-      printf ("Test %d\nNumber: %d\n%s number.\n\n", i + 1, num, result == PRIME ? "Prime" : "Not Prime");
-      if (result != expectedResults[i]) {
-         failedCount++;
-         printf ("Test %d failed: Expected %s, but got %s\n\n", i + 1,
-            expectedResults[i] == PRIME ? "Prime" : "Not Prime",
-            result == PRIME ? "Prime" : "Not Prime");
+void RunTestCases () {
+   int failedTestCount = 0;
+   for (int i = 0; i < 10; i++) {
+      int num = rand () % 1000 + 1, expected;   // Random number in 1 -1000
+      if (num <= 1) expected = NOT_PRIME;
+      else if (num == 2) expected = PRIME;
+      else {
+         expected = PRIME;
+         for (int j = 2; j * j <= num; j++) {
+            if (num % j == 0) {
+               expected = NOT_PRIME;
+               break;
+            }
+         }
+         printf ("Test %d: %d %s number.\n\n", i + 1, num, IsPrime (num) == 1 ? "Prime" : "Not Prime");
+         if (IsPrime (num) != expected) {
+            failedTestCount++;
+            printf ("Test %d failed: Number %d -> Expected %s, but got %s\n", i + 1, num, expected
+               ? "Prime" : "Not Prime", IsPrime (num) ? "Prime" : "Not Prime");
+         }
       }
    }
-   printf (failedCount > 0 ? "Test(s) failed: %d\n" : "All the tests has passed.\n", failedCount);
+   if (failedTestCount == 0) printf (GREEN"All the tests passed.\n"RESET);
 }
 
 void CheckPrimeForUserInput () {
    char input[100];
    int num;
-   printf ("\n\n     ~~~~~~~ PRIME CHECKER ~~~~~~~~\n");
+   printf ("\n     ~~~~~~~ PRIME CHECKER ~~~~~~~~\n");
    while (true) {
-      printf ("\nEnter a positive number or (E or e to exit): ");
+      printf ("\nEnter a positive number or (E/e to exit): ");
       fgets (input, sizeof (input), stdin);
       input[strcspn (input, "\n")] = 0;
       if (input[0] == 'E' || input[0] == 'e') {
-         printf ("Exiting program...\n");
+         printf ("Exiting...\n");
          break;
       }
       char* endptr;
       num = strtol (input, &endptr, 10);
-      if (*endptr != '\0' || endptr == input || num <= 0) printf ("Invalid input. Please enter a positive number or 'E' to exit.\n");
-      else {
-         int result = PrimeChecker (num);
-         printf ("%d is %s number.\n\n", num, result == PRIME ? "Prime" : "Not Prime");
-      }
+      if (*endptr != '\0' || num <= 0) printf (RED"Invalid input. Please enter a positive number or 'E/e' to exit.\n"RESET);
+      else printf ("%d is %s number.\n", num, IsPrime (num) == PRIME ? "Prime" : "Not Prime");
    }
 }
