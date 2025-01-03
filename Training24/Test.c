@@ -51,8 +51,7 @@ int main () {
          if (CompareFilesContent (referenceFile, outputFile, &rowNumber, &colNumber) == 0)
             wprintf (GREEN L"Files are identical. COMPARISON TEST PASSED.\n" RESET);
          else wprintf (RED L"Mismatch at row %d, col %d.\n" RESET, rowNumber, colNumber);
-         fclose (outputFile);
-         fclose (referenceFile);
+         fclose (outputFile); fclose (referenceFile);
          break;
       }
       case '3': wprintf (L"\nExiting...\n"); break;

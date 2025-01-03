@@ -7,16 +7,15 @@
 // Program on A6 branch.
 // Displays chess board and compares files.
 // ------------------------------------------------------------------------------------
-#include <stdio.h>
+#include <stdio.h>  
 
 wchar_t PrintPieceAtPosition (int row, int col) {
-   const wchar_t blackPieces[8] = { L'\u265C', L'\u265E', L'\u265D', L'\u265B', L'\u265A', L'\u265D', L'\u265E', L'\u265C' },
-      whitePieces[8] = { L'\u2656', L'\u2658', L'\u2657', L'\u2655', L'\u2654', L'\u2657', L'\u2658', L'\u2656' };
-   if (row == 0) return blackPieces[col];
-   else if (row == 7) return whitePieces[col];
-   else if (row == 1) return L'\u265F';  // Black Pawn
-   else if (row == 6) return L'\u2659';  // White Pawn
-   return L' ';
+   const wchar_t blackPieces[] = { L'\u265C', L'\u265E', L'\u265D', L'\u265B', L'\u265A' }, // Rook, Knight, Bishop, Queen, King
+      whitePieces[] = { L'\u2656', L'\u2658', L'\u2657', L'\u2655', L'\u2654' },
+      blackPawn = L'\u265F', whitePawn = L'\u2659';
+   if (row == 0) return blackPieces[col == 0 || col == 7 ? 0 : col == 1 || col == 6 ? 1 : col == 2 || col == 5 ? 2 : col == 3 ? 3 : 4];
+   return (row == 1) ? blackPawn : (row == 6) ? whitePawn : (row == 7) ? whitePieces[col == 0 || col == 7 ? 0 : col == 1 ||
+      col == 6 ? 1 : col == 2 || col == 5 ? 2 : col == 3 ? 3 : 4] : L' ';
 }
 
 void DisplayChessboard (FILE* outputStream) {
