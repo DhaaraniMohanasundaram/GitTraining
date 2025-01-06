@@ -60,25 +60,16 @@ int CompareFiles (const char* file1, const char* file2) {
       return 1;
    }
    fseek (f1, 0, SEEK_SET); fseek (f2, 0, SEEK_SET);
-   char* buffer1 = (char*)malloc (size1), * buffer2 = (char*)malloc (size2);
-   if (!buffer1 || !buffer2) {
-      printf (RED "Memory allocation failed.\n" RESET);
-      fclose (f1); fclose (f2);
-      return 1;
-   }
-   // Read the entire content of both files
-   fread (buffer1, 1, size1, f1); fread (buffer2, 1, size2, f2);
-   for (int i = 0; i < size1; i++) {
-      if (buffer1[i] != buffer2[i]) {
-         printf (RED "Error at bit %d, Expected %c, Actual %c\n" RESET, i, buffer2[i], buffer1[i]);
-         free (buffer1); free (buffer2);
+   char buffer1, buffer2;
+   while ((buffer1 = fgetc (f1)) != EOF && (buffer2 = fgetc (f2)) != EOF) {
+      if (buffer1 != buffer2) {
+         printf (RED "Error at bit %ld: Expected %c, Actual %c\n" RESET, ftell (f2), buffer2, buffer1);
          fclose (f1); fclose (f2);
          return 1;
       }
    }
-   free (buffer1); free (buffer2);
    fclose (f1); fclose (f2);
-   return 0; // Files are identical
+   return 0;  // Files are identical
 }
 
 int main (int argc, char** argv) {
@@ -91,23 +82,34 @@ int main (int argc, char** argv) {
       * expectedFiles[] = { "TData/Test1ref.txt", "TData/Test2ref.txt", "TData/Test3ref.txt", "TData/Test4ref.txt",
                             "TData/Test5ref.txt", "TData/Test6ref.txt", "TData/Test7ref.txt", "TData/Test8ref.txt" },
       * outputFile = "tempOutput.txt";
-   int numTests = sizeof (inputFiles) / sizeof (inputFiles[0]), testsFailed = 0;
-   char failedTests[512] = "";
+   int numTests = sizeof (inputFiles) / sizeof (inputFiles[0]);
    for (int i = 0; i < numTests; i++) {
-      const char* inputFile = inputFiles[i], * expectedFile = expectedFiles[i];
-      printf ("\nRunning test %d with input file: %s\n", i + 1, inputFile);
-      if (RunTestProgram (argv[1], inputFile, outputFile) != 0) {
-         printf (RED"Test %d failed to execute.\n"RESET, i + 1);
-         continue;
+      printf ("\nRunning test %d with input file: %s\n", i + 1, inputFiles[i]);
+      if (RunTestProgram (argv[1], inputFiles[i], outputFile) != 0) {
+         printf (RED "Test %d failed to execute.\n" RESET, i + 1);
+         break;  // Exit immediately if the test fails to execute
       }
-      if (CompareFiles (outputFile, expectedFile) != 0) {
-         // If the test failed, track the failed test number
-         if (testsFailed > 0) strcat (failedTests, ", ");   // If there are multiple failures
-         snprintf (failedTests + strlen (failedTests), sizeof (failedTests) - strlen (failedTests), "%d", i + 1);
-         testsFailed++;
+      if (CompareFiles (outputFile, expectedFiles[i]) != 0) {
+         printf (RED "\nTest %d has failed!\n" RESET "Expected Output: ", i + 1);
+         FILE* expectedFilePtr = fopen (expectedFiles[i], "r");
+         if (expectedFilePtr) {
+            char ch;
+            while ((ch = fgetc (expectedFilePtr)) != EOF) putchar (ch);
+            fclose (expectedFilePtr);
+         }
+         printf ("\nActual   Output: ");
+         FILE* actualFilePtr = fopen (outputFile, "r");
+         if (actualFilePtr) {
+            char ch;
+            while ((ch = fgetc (actualFilePtr)) != EOF) putchar (ch);
+            fclose (actualFilePtr);
+         }
+         printf ("\n");
+         remove (outputFile);
+         return 1;  // Exit immediately after the first failure
       }
    }
-   testsFailed == 0 ? printf (GREEN "\nAll tests are passed!\n" RESET) : printf (RED "\nTest %s is/are failed.\n" RESET, failedTests);
    remove (outputFile);
+   printf (GREEN "\nAll TestCases are passed!!\n" RESET);
    return 0;
 }
