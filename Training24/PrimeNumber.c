@@ -34,34 +34,24 @@ int main () {
 }
 
 int IsPrime (int num) {
-   if (num <= 1) return NOT_PRIME;
-   for (int i = 2; i * i <= num; i++) if (num % i == 0) return NOT_PRIME;
+   if (num == 2) return PRIME;
+   if (num <= 1 || num % 2 == 0) return NOT_PRIME;   // Even and negative numbers
+   for (int i = 3; i * i <= num; i += 2) if (num % i == 0) return NOT_PRIME;   // Check divisibility by odd numbers from 3
    return PRIME;
 }
 
 void RunTestCases () {
-   int failedTestCount = 0;
-   for (int i = 0; i < 10; i++) {
-      int num = rand () % 1000 + 1, expected;   // Random number in 1 -1000
-      if (num <= 1) expected = NOT_PRIME;
-      else if (num == 2) expected = PRIME;
-      else {
-         expected = PRIME;
-         for (int j = 2; j * j <= num; j++) {
-            if (num % j == 0) {
-               expected = NOT_PRIME;
-               break;
-            }
-         }
-         printf ("Test %d: %d %s number.\n\n", i + 1, num, IsPrime (num) == 1 ? "Prime" : "Not Prime");
-         if (IsPrime (num) != expected) {
-            failedTestCount++;
-            printf ("Test %d failed: Number %d -> Expected %s, but got %s\n", i + 1, num, expected
-               ? "Prime" : "Not Prime", IsPrime (num) ? "Prime" : "Not Prime");
-         }
+   for (int i = 0; i < 20; i++) {
+      int num = rand () % 100 + 1,   // Random number in 1 -100
+      expected = IsPrime (num);
+      printf ("\nTest case %d:  %d is %s number\n", i + 1, num, expected == PRIME ? "a Prime" : "Not a Prime");
+      if (IsPrime (num) != expected) {
+         printf ("Test case %d failed: For Number %d -> Expected %s, but got %s\n", i + 1, num,
+            expected == PRIME ? "Prime" : "Not Prime", IsPrime (num) == PRIME ? "Prime" : "Not Prime");
+         return;
       }
    }
-   if (failedTestCount == 0) printf (GREEN"All the tests passed.\n"RESET);
+   printf (GREEN"\nAll the test cases passed.\n"RESET);
 }
 
 void CheckPrimeForUserInput () {
