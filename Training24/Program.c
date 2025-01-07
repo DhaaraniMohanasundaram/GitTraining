@@ -13,8 +13,8 @@ wchar_t PrintPieceAtPosition (int row, int col) {
    const wchar_t* blackPieces[8] = { L"♜", L"♞", L"♝", L"♛", L"♚", L"♝", L"♞", L"♜" },
       * whitePieces[8] = { L"♖", L"♘", L"♗", L"♕", L"♔", L"♗", L"♘", L"♖" };
    return (row == 0) ? blackPieces[col][0] :
-      (row == 1) ? L"♟"[0] :
-      (row == 6) ? L"♙"[0] :
+      (row == 1) ? L'♟' :
+      (row == 6) ? L'♙' :
       (row == 7) ? whitePieces[col][0] :
       L' ';
 }
@@ -48,8 +48,7 @@ int CompareFilesContent (FILE* expectedFile, FILE* actualFile, int* row, int* co
    *col = 1;
    // Compare content of both files character by character
    while ((expectedChar = getwc (expectedFile)) != WEOF && (actualChar = getwc (actualFile)) != WEOF) {
-      if (expectedChar == L'\n' && actualChar == L'\n') continue;   // Ignore extra newlines
-      if (expectedChar != actualChar) return -2;   // Mismatch content
+      if (expectedChar != actualChar) return -1;   // Mismatch content
       (*col)++;
       if (expectedChar == L'\n') {
          (*row)++;

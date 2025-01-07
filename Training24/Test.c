@@ -37,7 +37,7 @@ int main () {
          break;
       }
       case '2': {   // Generate file and Run Comparison Test
-         FILE* outputFile;
+         FILE* outputFile, * referenceFile;
          if (fopen_s (&outputFile, "ChessboardOutput.txt", "w, ccs=UTF-8") == 0) {
             DisplayChessboard (outputFile);
             fclose (outputFile);
@@ -47,19 +47,16 @@ int main () {
             break;
          }
          // Run the comparison test
-         FILE* outputFileForComparison, * referenceFile;
-         if (fopen_s (&outputFileForComparison, "ChessboardOutput.txt", "r, ccs=UTF-8") != 0 ||
+         if (fopen_s (&outputFile, "ChessboardOutput.txt", "r, ccs=UTF-8") != 0 ||
             fopen_s (&referenceFile, "ChessboardReference.txt", "r, ccs=UTF-8") != 0) {
             wprintf (RED L"Error opening files for comparison.\n" RESET);
             break;
          }
          int row = 0, col = 0;
-         if (CompareFilesContent (referenceFile, outputFileForComparison, &row, &col) == 0)
+         if (CompareFilesContent (referenceFile, outputFile, &row, &col) == 0)
             wprintf (GREEN L"Files are identical. COMPARISON TEST PASSED.\n" RESET);
-         else if (CompareFilesContent (referenceFile, outputFileForComparison, &row, &col) == -1 ||
-            CompareFilesContent (referenceFile, outputFileForComparison, &row, &col) == -2)
-            wprintf (RED L"Files have different length or content. COMPARISON TEST FAILED.\n" RESET);
-         fclose (outputFileForComparison); fclose (referenceFile);
+         else wprintf (RED L"Files have different length or content. COMPARISON TEST FAILED.\n" RESET);
+         fclose (outputFile); fclose (referenceFile);
          break;
       }
       case '3': wprintf (L"\nExiting...\n"); break;
