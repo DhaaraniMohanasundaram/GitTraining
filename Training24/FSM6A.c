@@ -8,7 +8,6 @@
 // ------------------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
-#include <malloc.h>
 
 /// See File: // FSMDiagram.png for State Transition diagram
 
@@ -44,7 +43,7 @@ int ProcessFSM (FILE* inputFile, FILE* outputFile) {
    char ch;
    while ((ch = fgetc (inputFile)) != EOF) {
       if (ch == '0' || ch == '1') currentState = GetNextMealyState (currentState, ch - '0', &output);
-      else currentState = GetNextMealyState (currentState, 0, &output);
+      else return -1;
       fprintf (outputFile, "%d", output);
    }
    return 0;
@@ -60,7 +59,10 @@ int main (int argc, char** argv) {
       printf ("Error opening file.\n");
       return 1;
    }
-   ProcessFSM (inputFile, outputFile);
+   if (ProcessFSM (inputFile, outputFile) == -1) {
+      fclose (inputFile); fclose (outputFile);
+      return -1;  // Exit immediately if encounters invalid input
+   }
    fclose (inputFile); fclose (outputFile);
    return 0;
 }

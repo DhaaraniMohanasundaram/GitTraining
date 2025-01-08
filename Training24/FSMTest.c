@@ -39,9 +39,12 @@ int RunTestProgram (const char* exeFilePathAndName, const char* inputFilePathAnd
       return 1;
    }
    WaitForSingleObject (pi.hProcess, INFINITE);
+   DWORD exitCode;   // Check if FSM process exited with error due to invalid input
+   GetExitCodeProcess (pi.hProcess, &exitCode);
    CloseHandle (pi.hProcess);
    CloseHandle (pi.hThread);
    free (cmdline);
+   if (exitCode == -1) return 1; // Exit immediately after invalid input
    return 0;
 }
 
@@ -86,8 +89,9 @@ int main (int argc, char** argv) {
    for (int i = 0; i < numTests; i++) {
       printf ("\nRunning test %d with input file: %s\n", i + 1, inputFiles[i]);
       if (RunTestProgram (argv[1], inputFiles[i], outputFile) != 0) {
-         printf (RED "Test %d failed to execute.\n" RESET, i + 1);
-         break;  // Exit immediately if the test fails to execute
+         printf (RED "Test failed: Invalid input in test %d.\n" RESET, i + 1);
+         remove (outputFile);
+         return 1;  // Exit immediately if test fails
       }
       if (CompareFiles (outputFile, expectedFiles[i]) != 0) {
          printf (RED "\nTest %d has failed!\n" RESET "Expected Output: ", i + 1);
