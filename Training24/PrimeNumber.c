@@ -21,6 +21,9 @@
 /// <summary>To check if a number is prime.</summary>
 int IsPrime (int num);
 
+/// <summary>To generate a random prime number between lower and upper limits.</summary>
+int GenerateRandomPrime (int lower, int upper);
+
 /// <summary>To run a few test cases with PrimeChecker using random numbers.</summary>
 void RunTestCases ();
 
@@ -34,15 +37,26 @@ int main () {
 }
 
 int IsPrime (int num) {
+   if (num <= 1) return NOT_PRIME;
    if (num == 2) return PRIME;
-   if (num <= 1 || num % 2 == 0) return NOT_PRIME;   // Even and negative numbers
+   if (num % 2 == 0) return NOT_PRIME;
    for (int i = 3; i * i <= num; i += 2) if (num % i == 0) return NOT_PRIME;   // Check divisibility by odd numbers from 3
    return PRIME;
 }
 
+int GenerateRandomPrime (int lower, int upper) {
+   int num;
+   if (lower % 2 == 0) lower++;   // If its even
+   do {
+      num = rand () % (upper - lower + 1) + lower;
+      if (num % 2 == 0) num++;
+   } while (IsPrime (num) != PRIME);
+   return num;
+}
+
 void RunTestCases () {
    for (int i = 0; i < 20; i++) {
-      int num = rand () % 100 + 1,   // Random number in 1 -100
+      int num = GenerateRandomPrime (1, 1000),   // Random number in 0 -1000
       expected = IsPrime (num);
       printf ("\nTest case %d:  %d is %s number\n", i + 1, num, expected == PRIME ? "a Prime" : "Not a Prime");
       if (IsPrime (num) != expected) {
@@ -63,7 +77,7 @@ void CheckPrimeForUserInput () {
       fgets (input, sizeof (input), stdin);
       input[strcspn (input, "\n")] = 0;
       if (input[0] == 'E' || input[0] == 'e') {
-         printf ("Exiting...\n");
+         printf ("Exiting...!\n");
          break;
       }
       char* endptr;
